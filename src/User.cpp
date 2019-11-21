@@ -1,6 +1,6 @@
 #include "../include/Watchable.h"
 #include "../include/User.h"
-
+#include "../include/Session.h"
 
 User::User(const std::string& _name):name(_name){
 
@@ -20,11 +20,12 @@ LengthRecommenderUser::LengthRecommenderUser(const std::string& _name):User(_nam
 
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
-    /* int sum = 0;
-    for(Watchable& watched: s.get_active_user->get_history()){
-        sum += watched.getLength();
+    unsigned int sum = 0;
+    std::vector<Watchable*> history = s.get_active_user()->get_history();
+    for(Watchable *watched: history){
+        sum += watched->getLength();
     }
-    int desiredLength = average / s.get_active_user->get_history().size(); */
+    unsigned int desiredLength = sum / history.size();
     return nullptr;
 }
 

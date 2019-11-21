@@ -1,6 +1,8 @@
 #include "../include/Watchable.h"
 #include "../include/User.h"
 #include "../include/Session.h"
+#include <algorithm>
+
 
 User::User(const std::string& _name):name(_name), recommendedAlgorithm("len"){}
 
@@ -18,13 +20,22 @@ LengthRecommenderUser::LengthRecommenderUser(const std::string& _name):User(_nam
 
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
-    unsigned int sum = 0;
+    int sum = 0;
+    Watchable* returnedShow = nullptr;
     std::vector<Watchable*> history = s.get_active_user()->get_history();
     for(Watchable *watched: history){
         sum += watched->getLength();
     }
-    unsigned int desiredLength = sum / history.size();
-    return nullptr;
+    int desiredLength = sum / history.size();
+    int bestDifference = std::numeric_limits<int>::max();
+    for(Watchable* cont: s.getContent()){
+        int difference = abs(desiredLength - cont->getLength());
+        if(!(std::find(history.begin(), history.end(), cont) != history.end() && difference > bestDifference)) {
+            bestDifference = difference;
+            returnedShow = cont;
+        }
+    }
+    return returnedShow;
 }
 
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){

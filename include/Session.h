@@ -17,7 +17,9 @@ public:
     void start();
     User* get_active_user() const;
     std::unordered_map<std::string,User*> getUserMap() const;
-    void add_user(User* user, std::string name);
+    void add_to_user_map(User* user, std::string name);
+    void change_user(User* user);
+    void erase_user(std::string name);
     std::string get_last_input();
 private:
     std::string last_input;

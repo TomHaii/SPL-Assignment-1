@@ -13,28 +13,28 @@ Session::Session(const std::string &configFilePath) {
     std::ifstream i(configFilePath);
     json j;
     i >> j;
-    json movies = j.at("movies");
+    json movies = j["movies"];
     long id = 0;
-    for(json& val: movies) {
+    for(json& movie: movies) {
         id++;
-        Watchable *tmpMovie = new Movie(id, val["name"], val["length"], val["tags"]);
+        Watchable *tmpMovie = new Movie(id, movie["name"], movie["length"], movie["tags"]);
         content.push_back(tmpMovie);
     }
-    json series = j.at("tv_series");
-    for (json& val: series) {
-        json seasonsList = val.at("seasons");
+    json series = j["tv_series"];
+    for (json& tmp_series: series) {
+        json seasonsList = tmp_series.at("seasons");
         for (int k = 0; k < seasonsList.size(); k++) {
-            int episodesNumber = val.at("seasons")[k];
+            int episodesNumber = tmp_series.at("seasons")[k];
             for (int e = 1; e <= episodesNumber; e++) {
                 id++;
-                Watchable *tmpEpisode = new Episode(id, val["name"], val["episode_length"], k+1, e, val["tags"]);
+                Watchable *tmpEpisode = new Episode(id, tmp_series["name"], tmp_series["episode_length"], k + 1, e, tmp_series["tags"]);
                 content.push_back(tmpEpisode);
             }
         }
     }
     last_input="";
-    User* DEFAULT = new LengthRecommenderUser("Default");
-    userMap["Default"] = DEFAULT;
+    User* DEFAULT = new LengthRecommenderUser("DEFAULT");
+    userMap["DEFAULT"] = DEFAULT;
 
 }
 
@@ -50,6 +50,16 @@ std::string Session::get_last_input(){
     return last_input;
 }
 
+void Session::erase_user(std::string name) {
+    userMap.erase(name);
+}
+
+
+std::unordered_map<std::string,User*> Session::getUserMap() const{
+    return userMap;
+}
+
+
 
 void Session::start() {
     printf("SPLFLIX is now on!”");
@@ -57,14 +67,16 @@ void Session::start() {
         std::cout << "\nwhat would you like to do? ";
         std::cin >> last_input;
     }
-    BaseAction* exit = new Exit();
-    exit->act(*this);
-
-
+//    BaseAction* exit = new Exit();
+//    exit->act(*this);
 }
 
-void Session::add_user(User* user, std::string name){
+void Session::add_to_user_map(User* user, std::string name){
     userMap[name] = user;
+}
+
+void Session::change_user(User *user) {
+    activeUser = user;
 }
 
 

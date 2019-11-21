@@ -15,6 +15,8 @@ ActionStatus BaseAction::getStatus() const{
     return status;
 }
 
+void BaseAction::complete() {}
+
 void CreateUser::act(Session& sess){
     std::string input = sess.get_last_input();
     int len = input.length();
@@ -32,8 +34,14 @@ void CreateUser::act(Session& sess){
         new_user = new GenreRecommenderUser(user_name);
     }
     sess.add_user(new_user,user_name);
+    complete();
 }
 
-std::string CreateUser::toString() const{
-    return "";
+std::string CreateUser::toString() const {
+    if (getStatus() == COMPLETED){
+        return "CreateUser COMPLETED";
+    }
+    else if (getStatus() == ERROR){
+
+    }
 }

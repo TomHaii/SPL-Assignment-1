@@ -31,14 +31,28 @@ Watchable* Episode::getNextWatchable(Session &) const {
 }
 
 std::string Movie::toString() const {
-    return "blabla";
+    return name;
 }
 
 
 std::string Episode::toString() const {
-    return "fsd";
+    std::string ep = "E"; std::string sea = "S";
+    if (season < 10){
+        sea = "0" + std::to_string(season);
+    }
+    else{
+        sea = "" + std::to_string(season);;
+    }
+    if (episode < 10) {
+        ep = "0" + std::to_string(episode);;
+    }
+    else{
+        ep = "" +  std::to_string(episode);
+    }
+    std::string output = seriesName +" "+ sea + ep;
+    return output;
 }
 
 int Watchable::getLength() const{
-return length;
+    return length;
 }

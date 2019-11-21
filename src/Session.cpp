@@ -32,22 +32,37 @@ Session::Session(const std::string &configFilePath) {
             }
         }
     }
-   // User* DEFAULT = new LengthRecommenderUser("Default");
-   // userMap["Default"] = DEFAULT;
-
+    last_input="";
+    User* DEFAULT = new LengthRecommenderUser("Default");
+    userMap["Default"] = DEFAULT;
 
 }
+
+
 
 User* Session::get_active_user() const{
     return activeUser;
 }
 
+std::string Session::get_last_input(){
+    return last_input;
+}
+
 
 void Session::start() {
     printf("SPLFLIX is now on!”");
+//    last_input = "createuser yosi len";
+//    int len = last_input.length();
+//    std::string user_name; std::string algorithm;
+//    user_name = last_input.substr(11, len-15);
+//    algorithm = last_input.substr(len-3, 3);
+//    std::cout << user_name + " " + algorithm;
 
 }
 
+void Session::add_user(User* user, std::string name){
+    userMap[name] = user;
+}
 
 
 Session::~Session() {

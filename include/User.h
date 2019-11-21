@@ -19,7 +19,7 @@ protected:
     std::vector<Watchable*> history;
 private:
     const std::string name;
-//    std::string recommendedAlgorithm;
+    std::string recommendedAlgorithm;
 
 };
 

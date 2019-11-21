@@ -2,9 +2,7 @@
 #include "../include/User.h"
 #include "../include/Session.h"
 
-User::User(const std::string& _name):name(_name){
-
-}
+User::User(const std::string& _name):name(_name), recommendedAlgorithm("len"){}
 
 std::string User::getName() const {
     return name;

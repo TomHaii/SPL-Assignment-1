@@ -10,14 +10,19 @@ std::string User::getName() const {
     return name;
 }
 
+std::string User::getRecommendedAlgorithm() const {
+    return recommendedAlgorithm;
+}
+
 std::vector<Watchable*> User::get_history() const{
     return history;
 }
 
-LengthRecommenderUser::LengthRecommenderUser(const std::string& _name):User(_name){
-
+void User::set_history(std::vector<Watchable *> _history) {
+    history = _history;
 }
 
+LengthRecommenderUser::LengthRecommenderUser(const std::string& _name):User(_name){}
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
     int sum = 0;
@@ -40,7 +45,6 @@ Watchable* LengthRecommenderUser::getRecommendation(Session& s){
 
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
 }
-
 
 Watchable* RerunRecommenderUser::getRecommendation(Session& s){
     return nullptr;

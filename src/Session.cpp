@@ -51,6 +51,7 @@ std::string Session::get_last_input(){
 }
 
 void Session::erase_user(std::string name) {
+    delete(userMap[name]);
     userMap.erase(name);
 }
 

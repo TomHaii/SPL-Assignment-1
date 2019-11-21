@@ -104,7 +104,6 @@ std::string ChangeActiveUser::toString() const {
 }
 
 void DeleteUser::act(Session &sess) {
-    std::string s = "deleteuser yosi";
     std::string input = sess.get_last_input();
     int len = input.length();
     if (len < 12){
@@ -135,6 +134,56 @@ std::string DeleteUser::toString() const {
     return "";
 }
 
+void DuplicateUser::act(Session &sess) {
+    std::string input = sess.get_last_input();
+    int len = input.length();
+    if (len < 11){
+        error("invalid input");
+    }
+    if (getStatus() != ERROR) {
+        std::string orig_user;  std::string new_user;
+        std::string users = input.substr(11, len - 11);
+        int i = 0;
+        while(users.at(i) != ' '){
+            i++;
+        }
+        orig_user =  users.substr(0, i-1);
+        new_user = users.substr(i+1, users.length()-1-i);
+        std::unordered_map<std::string,User*> map = sess.getUserMap();
+        if (map.count(orig_user) == 0) {
+            error("no such user");
+        }
+        else{
+            if (map.count(new_user) > 0){
+                error("the new user name is already taken");
+            }
+            else {
+                User *curr = map[orig_user];
+                User *duplicated;
+                if (curr->getRecommendedAlgorithm() == "len") {
+                    duplicated = new LengthRecommenderUser(new_user);
+                } else if (curr->getRecommendedAlgorithm() == "rer") {
+                    duplicated = new RerunRecommenderUser(new_user);
+                } else {
+                    duplicated = new GenreRecommenderUser(new_user);
+                }
+                duplicated->set_history(curr->get_history());
+                sess.add_to_user_map(duplicated, new_user);
+                complete();
+            }
+        }
+    }
+}
+
+std::string DuplicateUser::toString() const {
+    if (getStatus() == COMPLETED){
+        return "DuplicateUser COMPLETED";
+    }
+    else if (getStatus() == ERROR){
+        return ("DuplicateUser ERROR: " + getErrorMsg());
+    }
+    return "";
+}
 
 
 

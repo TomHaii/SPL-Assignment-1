@@ -14,11 +14,11 @@ Session::Session(const std::string &configFilePath) {
     json j;
     i >> j;
     json movies = j["movies"];
-    long id = 0;
+    long id = 1;
     for(json& movie: movies) {
-        id++;
         Watchable *tmpMovie = new Movie(id, movie["name"], movie["length"], movie["tags"]);
         content.push_back(tmpMovie);
+        id++;
     }
     json series = j["tv_series"];
     for (json& tmp_series: series) {
@@ -26,9 +26,9 @@ Session::Session(const std::string &configFilePath) {
         for (int k = 0; k < seasonsList.size(); k++) {
             int episodesNumber = tmp_series.at("seasons")[k];
             for (int e = 1; e <= episodesNumber; e++) {
-                id++;
                 Watchable *tmpEpisode = new Episode(id, tmp_series["name"], tmp_series["episode_length"], k + 1, e, tmp_series["tags"]);
                 content.push_back(tmpEpisode);
+                id++;
             }
         }
     }

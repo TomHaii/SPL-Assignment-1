@@ -185,5 +185,36 @@ std::string DuplicateUser::toString() const {
     return "";
 }
 
+void PrintContentList::act(Session &sess){
+    for(Watchable* w : sess.getContent()){
+        std::cout << w->toString() + "\n";
+    }
+    complete();
+}
+
+std::string PrintContentList::toString() const {
+    return "PrintContentList COMPLETED";
+}
+
+void PrintWatchHistory::act(Session &sess){
+    User *active = sess.get_active_user();
+    std::string output = "watch history for " + active->getName() + ":\n";
+    int i = 0;
+    for(Watchable* w : active->get_history()){
+        output += std::to_string(i) + w->toStringHistory() + "\n";
+        i++;
+    }
+    complete();
+}
+
+std::string PrintWatchHistory::toString() const {
+    return "PrintWatchHistory COMPLETED";
+}
+
+void Watch::act(Session &sess){
+
+}
+
+
 
 

@@ -25,33 +25,62 @@ Watchable* Movie::getNextWatchable(Session &session) const {
     return nullptr;
 }
 
+std::vector<std::string> Watchable::getTags() const{
+    return tags;
+}
 
 Watchable* Episode::getNextWatchable(Session &) const {
     return nullptr;
 }
 
+long Watchable::getId() const {
+    return id;
+}
+
 std::string Movie::toString() const {
+    std::string output = std::to_string(getId()) +". " + name + " " + std::to_string(getLength())+ " minutes [";
+    for (std::string s : getTags()){
+        output += s + ", ";
+    }
+    output = output.substr(0, output.length()-2);
+    output += "]";
+    return output;
+}
+
+std::string Episode::toString() const {
+    std::string output =  std::to_string(getId()) +". " + toStringHistory() + " ";
+    output += std::to_string(getLength()) + " minutes [";
+    for (std::string s : getTags()) {
+        output += s + ", ";
+    }
+    output = output.substr(0, output.length() - 2);
+    output += "]";
+    return output;
+}
+
+std::string Movie::toStringHistory() const {
     return name;
 }
 
-
-std::string Episode::toString() const {
+std::string Episode::toStringHistory() const {
     std::string ep = "E"; std::string sea = "S";
     if (season < 10){
-        sea = "0" + std::to_string(season);
+        sea += "0" + std::to_string(season);
     }
     else{
-        sea = "" + std::to_string(season);;
+        sea += "" + std::to_string(season);;
     }
     if (episode < 10) {
-        ep = "0" + std::to_string(episode);;
+        ep += "0" + std::to_string(episode);;
     }
     else{
-        ep = "" +  std::to_string(episode);
+        ep += "" +  std::to_string(episode);
     }
     std::string output = seriesName +" "+ sea + ep;
     return output;
 }
+
+
 
 int Watchable::getLength() const{
     return length;

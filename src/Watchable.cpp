@@ -20,7 +20,7 @@ Movie::Movie(long _id, const std::string& _name, int _length, const std::vector<
 {}
 
 Episode::Episode(long _id, const std::string& _seriesName,int _length, int _season, int _episode ,const std::vector<std::string>& _tags):
-        Watchable(_id, _length, _tags), season(_season), episode(_episode), seriesName(_seriesName) {}
+        Watchable(_id, _length, _tags), season(_season), episode(_episode), seriesName(_seriesName), nextEpisodeId(0){}
 
 Watchable* Movie::getNextWatchable(Session &session) const {
     return session.get_active_user()->getRecommendation(session);

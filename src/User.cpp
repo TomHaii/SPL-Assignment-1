@@ -28,9 +28,10 @@ void User::set_history(std::vector<Watchable*> _history) {
     history = _history;
 }
 
-void User::addToHistory(Watchable* w) {
+void User::addToHistory(Watchable* w){
     history.push_back(w);
 }
+
 
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
     setRecommendedAlgorithm("len");
@@ -38,7 +39,7 @@ LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_na
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
     int sum = 0;
-    Watchable* returnedShow = nullptr;
+    Watchable* returnedShow;
     std::vector<Watchable*> history = s.get_active_user()->get_history();
     for(Watchable *watched: history){
         sum += watched->getLength();
@@ -47,7 +48,7 @@ Watchable* LengthRecommenderUser::getRecommendation(Session& s){
     int bestDifference = std::numeric_limits<int>::max();
     for(Watchable* cont: s.getContent()){
         int difference = abs(desiredLength - cont->getLength());
-        if(!(std::find(history.begin(), history.end(), cont) != history.end() && difference > bestDifference)) {
+        if((!(std::find(history.begin(), history.end(), cont) != history.end())) && difference < bestDifference) {
             bestDifference = difference;
             returnedShow = cont;
         }
@@ -72,7 +73,6 @@ Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
             foundShow = true;
             lastRecommenedWatchable = returnedShow;
         }
-
     }
     return returnedShow;
 }
@@ -85,7 +85,7 @@ GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name)
 }
 Watchable* GenreRecommenderUser::getRecommendation(Session& s){
     int noContentCounter = 0;
-    Watchable* returnedShow = nullptr;
+    Watchable* returnedShow;
     sort(s.get_active_user()->getPopularTags().begin(), s.get_active_user()->getPopularTags().end());
     int popularTagsSize = s.get_active_user()->getPopularTags().size();
     auto mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1);

@@ -3,7 +3,8 @@
 //
 
 #include "../include/Watchable.h"
-
+#include "../include/Session.h"
+#include "../include/User.h"
 
 Watchable::Watchable(long _id, int _length, const std::vector<std::string> &_tags):
         id(_id),length(_length), tags(_tags)  {
@@ -22,16 +23,17 @@ Episode::Episode(long _id, const std::string& _seriesName,int _length, int _seas
         Watchable(_id, _length, _tags), season(_season), episode(_episode), seriesName(_seriesName) {}
 
 Watchable* Movie::getNextWatchable(Session &session) const {
-    return nullptr;
+    return session.get_active_user()->getRecommendation(session);
 }
 
 std::vector<std::string> Watchable:: getTags() const{
     return tags;
 }
 
-Watchable* Episode::getNextWatchable(Session &) const {
+Watchable* Episode::getNextWatchable(Session & _sess) const {
     return nullptr;
 }
+
 
 long Watchable::getId() const {
     return id;

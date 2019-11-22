@@ -37,17 +37,17 @@ LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_na
 }
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
-    int sum = 0;
+    unsigned int sum = 0;
     Watchable* returnedShow = nullptr;
     std::vector<Watchable*> history = s.get_active_user()->get_history();
     for(Watchable *watched: history){
-        sum += watched->getLength();
+        sum = sum + watched->getLength();
     }
     int desiredLength = sum / history.size();
     int bestDifference = std::numeric_limits<int>::max();
     for(Watchable* cont: s.getContent()){
         int difference = abs(desiredLength - cont->getLength());
-        if(!(std::find(history.begin(), history.end(), cont) != history.end() && difference > bestDifference)) {
+        if((!(std::find(history.begin(), history.end(), cont) != history.end())) && difference < bestDifference) {
             bestDifference = difference;
             returnedShow = cont;
         }
@@ -112,9 +112,18 @@ std::vector<std::pair<std::string,long>>& User::getPopularTags(){
     return popularTags;
 }
 
-//void User::increaseTag(std::string &tag) {
-//    if(std::find(history.begin(), history.end(), tag) != history.end()){
-//
-//    }
-//}
+void User::increaseTag(std::string &tag) {
+    int index = 0;
+    bool tagNotFound = true;
+    for(std::pair<std::string, long>& p: popularTags){
+        if(p.first == tag){
+            p.second++;
+            tagNotFound = false;
+        }
+        index++;
+    }
+    if(tagNotFound){
+        popularTags.emplace_back(tag,1);
+    }
+}
 

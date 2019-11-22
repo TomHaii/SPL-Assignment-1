@@ -199,7 +199,7 @@ void PrintActionsLog::act(Session &sess) {
 }
 
 std::string PrintActionsLog::toString() const {
-    return "PrintActionsLog COMPLETED";
+     return "PrintActionsLog COMPLETED";
 }
 
 void Exit::act(Session& sess) {

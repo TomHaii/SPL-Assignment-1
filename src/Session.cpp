@@ -31,15 +31,19 @@ Session::Session(const std::string &configFilePath) {
                 if (!last || (e+1 <= episodesNumber)){
                     tmpEpisode->setNextEpisode(id+1);
                 }
+                else{
+                    tmpEpisode->setNextEpisode(-1);
+                }
                 content.push_back(tmpEpisode);
                 id++;
             }
         }
     }
+    last = nullptr;
     command=""; second=""; third="";
     User* DEFAULT = new LengthRecommenderUser("DEFAULT");
     userMap["DEFAULT"] = DEFAULT;
-    possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "exit"};
+    possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
 }
 
 std::vector<Watchable*> Session::getContent() const {
@@ -113,6 +117,27 @@ void Session::start() {
             BaseAction* watch = new Watch();
             watch->act(*this);
             actionsLog.push_back(watch);
+            std::string ans="";
+            while (ans != "n"){
+                long historySize = activeUser->get_history().size();
+                Watchable* next = activeUser->get_history().at(historySize-1)->getNextWatchable(*this);
+                std::cout<<"We recommend watching " + next->toString()+", continue watching? [y/n]"<<std::endl;
+                std::cin >> ans;
+                if (ans != "y" && ans != "n"){
+                    std::cout<<"please choose y or n"<<std::endl;
+                }
+                else if (ans == "y") {
+                    second = next->getId();
+                    BaseAction* watch2 = new Watch();
+                    watch2->act(*this);
+                    actionsLog.push_back(watch2);
+                }
+            }
+        }
+        else if (command == "watchlist"){
+            BaseAction* watchlist = new PrintWatchHistory;
+            watchlist->act(*this);
+            actionsLog.push_back(watchlist);
         }
         else if(command == "log"){
             BaseAction* log = new PrintActionsLog();

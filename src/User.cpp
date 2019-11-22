@@ -14,6 +14,10 @@ std::string User::getRecommendedAlgorithm() const {
     return recommendedAlgorithm;
 }
 
+void User::setRecommendedAlgorithm(std::string s)  {
+    recommendedAlgorithm = s;
+}
+
 std::vector<Watchable*> User::get_history() const{
     return history;
 }
@@ -26,7 +30,9 @@ void User::addToHistory(Watchable *w) {
     history.push_back(w);
 }
 
-LengthRecommenderUser::LengthRecommenderUser(const std::string& _name):User(_name){}
+LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
+    setRecommendedAlgorithm("len");
+}
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
     int sum = 0;
@@ -48,19 +54,23 @@ Watchable* LengthRecommenderUser::getRecommendation(Session& s){
 }
 
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
-    lastRecommenedWatchable = get_history().at(0);
+    setRecommendedAlgorithm("rer");
+    if (!history.empty()) {
+        lastRecommenedWatchable = get_history().at(0);
+    }
 }
 
-Watchable* RerunRecommenderUser::getRecommendation(Session& s){
-    Watchable* returnedShow = nullptr;
+Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
+    Watchable *returnedShow = nullptr;
     bool foundShow = false;
     int historySize = s.get_active_user()->get_history().size();
-    for(int i = 0; !foundShow && i > historySize; i++) {
+    for (int i = 0; !foundShow && i < historySize; i++) {
         if (std::find(history.begin(), history.end(), lastRecommenedWatchable) != history.end()) {
             returnedShow = s.get_active_user()->get_history().at((i + 1) % historySize);
             foundShow = true;
             lastRecommenedWatchable = returnedShow;
         }
+
     }
     return returnedShow;
 }
@@ -68,6 +78,8 @@ Watchable* RerunRecommenderUser::getRecommendation(Session& s){
 
 
 GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name){
+    setRecommendedAlgorithm("gen");
+
 }
 Watchable* GenreRecommenderUser::getRecommendation(Session& s){
     int noContentCounter = 0;
@@ -99,6 +111,8 @@ std::vector<std::pair<std::string,long>>& User::getPopularTags(){
 }
 
 void User::increaseTag(std::string &tag) {
-    tagsMap[tag]++;
+    if(std::find(history.begin(), history.end(), tag) != history.end()){
+
+    }
 }
 

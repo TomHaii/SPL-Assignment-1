@@ -24,6 +24,7 @@ public:
     std::string thirdInput() const;
     std::vector<BaseAction*>& getActionsLog();
 private:
+    Watchable* last;
     std::vector<std::string> possibleActions;
     std::string command;
     std::string second;

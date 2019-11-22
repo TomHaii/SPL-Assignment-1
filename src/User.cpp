@@ -44,11 +44,23 @@ Watchable* LengthRecommenderUser::getRecommendation(Session& s){
 }
 
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
+    lastRecommenedWatchable = get_history().at(0);
 }
 
 Watchable* RerunRecommenderUser::getRecommendation(Session& s){
-    return nullptr;
+    Watchable* returnedShow = nullptr;
+    bool foundShow = false;
+    int historySize = s.get_active_user()->get_history().size();
+    for(int i = 0; !foundShow && i > historySize; i++) {
+        if (std::find(history.begin(), history.end(), lastRecommenedWatchable) != history.end()) {
+            returnedShow = s.get_active_user()->get_history().at((i + 1) % historySize);
+            foundShow = true;
+            lastRecommenedWatchable = returnedShow;
+        }
+    }
+    return returnedShow;
 }
+
 GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name){
 }
 Watchable* GenreRecommenderUser::getRecommendation(Session& s){

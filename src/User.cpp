@@ -28,21 +28,20 @@ void User::set_history(std::vector<Watchable*> _history) {
     history = _history;
 }
 
-void User::addToHistory(Watchable* w){
+void User::addToHistory(Watchable* w) {
     history.push_back(w);
 }
-
 
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
     setRecommendedAlgorithm("len");
 }
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
-    int sum = 0;
-    Watchable* returnedShow;
+    unsigned int sum = 0;
+    Watchable* returnedShow = nullptr;
     std::vector<Watchable*> history = s.get_active_user()->get_history();
     for(Watchable *watched: history){
-        sum += watched->getLength();
+        sum = sum + watched->getLength();
     }
     int desiredLength = sum / history.size();
     int bestDifference = std::numeric_limits<int>::max();
@@ -73,6 +72,7 @@ Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
             foundShow = true;
             lastRecommenedWatchable = returnedShow;
         }
+
     }
     return returnedShow;
 }
@@ -85,7 +85,7 @@ GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name)
 }
 Watchable* GenreRecommenderUser::getRecommendation(Session& s){
     int noContentCounter = 0;
-    Watchable* returnedShow;
+    Watchable* returnedShow = nullptr;
     sort(s.get_active_user()->getPopularTags().begin(), s.get_active_user()->getPopularTags().end());
     int popularTagsSize = s.get_active_user()->getPopularTags().size();
     auto mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1);
@@ -112,9 +112,18 @@ std::vector<std::pair<std::string,long>>& User::getPopularTags(){
     return popularTags;
 }
 
-//void User::increaseTag(std::string &tag) {
-//    if(std::find(history.begin(), history.end(), tag) != history.end()){
-//
-//    }
-//}
+void User::increaseTag(std::string &tag) {
+    int index = 0;
+    bool tagNotFound = true;
+    for(std::pair<std::string, long>& p: popularTags){
+        if(p.first == tag){
+            p.second++;
+            tagNotFound = false;
+        }
+        index++;
+    }
+    if(tagNotFound){
+        popularTags.emplace_back(tag,1);
+    }
+}
 

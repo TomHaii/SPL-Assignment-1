@@ -179,10 +179,7 @@ std::string DuplicateUser::toString() const {
     if (getStatus() == COMPLETED){
         return "DuplicateUser COMPLETED";
     }
-    else if (getStatus() == ERROR){
-        return ("DuplicateUser ERROR: " + getErrorMsg());
-    }
-    return "";
+    return ("DuplicateUser ERROR: " + getErrorMsg());\
 }
 
 void PrintContentList::act(Session &sess){
@@ -211,10 +208,25 @@ std::string PrintWatchHistory::toString() const {
     return "PrintWatchHistory COMPLETED";
 }
 
-void Watch::act(Session &sess){
-
+void Watch::act(Session &sess) {
+    std::string input = sess.get_last_input();
+    std::string _id = input.substr(6, input.length() - 6);
+    long id = atol(_id.c_str());
+    if (id > sess.getContent().size()) {
+        error("invalid id inserted");
+    } else {
+        Watchable *w = sess.getContent().at(id - 1);
+        std::cout << "Watching " + w->toStringHistory();
+        complete();
+        sess.get_active_user()->addToHistory(w);
+    }
 }
 
-
+std::string Watch::toString() const {
+    if (getStatus() == ERROR){
+        return +"Watch ERROR: " +getErrorMsg();
+    }
+    return "Watch COMPLETED";
+}
 
 

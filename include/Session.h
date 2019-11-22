@@ -21,6 +21,7 @@ public:
     void change_user(User* user);
     void erase_user(std::string name);
     std::string get_last_input();
+//    std::vector<BaseAction*>* getActionsLog();
 private:
     std::string last_input;
     std::vector<Watchable*> content;

@@ -22,6 +22,10 @@ void User::set_history(std::vector<Watchable *> _history) {
     history = _history;
 }
 
+void User::addToHistory(Watchable *w) {
+    history.push_back(w);
+}
+
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name):User(_name){}
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){

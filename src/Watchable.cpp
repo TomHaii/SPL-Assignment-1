@@ -80,8 +80,6 @@ std::string Episode::toStringHistory() const {
     return output;
 }
 
-
-
 int Watchable::getLength() const{
     return length;
 }

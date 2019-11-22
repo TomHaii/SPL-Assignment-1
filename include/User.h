@@ -16,6 +16,7 @@ public:
     std::string getRecommendedAlgorithm() const;
     std::vector<Watchable*> get_history() const;
     void  set_history(std::vector<Watchable*> _history);
+    void addToHistory(Watchable* w);
 protected:
     std::vector<Watchable*> history;
 private:

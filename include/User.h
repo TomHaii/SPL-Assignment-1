@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+
+
 class Watchable;
 class Session;
 
@@ -15,13 +17,18 @@ public:
     std::string getName() const;
     std::string getRecommendedAlgorithm() const;
     std::vector<Watchable*> get_history() const;
-    void  set_history(std::vector<Watchable*> _history);
+    void set_history(std::vector<Watchable*> _history);
     void addToHistory(Watchable* w);
+    void increaseTag(std::string &tag);
+    std::vector<std::pair<std::string,long>>& getPopularTags();
+
 protected:
     std::vector<Watchable*> history;
 private:
     const std::string name;
     std::string recommendedAlgorithm;
+    std::unordered_map<std::string, long> tagsMap;
+    std::vector<std::pair<std::string, long>> popularTags;
 
 };
 

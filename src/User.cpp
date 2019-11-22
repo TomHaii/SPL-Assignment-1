@@ -65,10 +65,40 @@ Watchable* RerunRecommenderUser::getRecommendation(Session& s){
     return returnedShow;
 }
 
+
+
 GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name){
 }
 Watchable* GenreRecommenderUser::getRecommendation(Session& s){
-    return nullptr;
+    int noContentCounter = 0;
+    Watchable* returnedShow = nullptr;
+    sort(s.get_active_user()->getPopularTags().begin(), s.get_active_user()->getPopularTags().end());
+    int popularTagsSize = s.get_active_user()->getPopularTags().size();
+    auto mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1);
+    std::vector<Watchable*> history = s.get_active_user()->get_history();
+    for(Watchable* cont: s.getContent()){
+        std::vector<std::string> currentContTags = cont->getTags();
+        if(!(std::find(history.begin(), history.end(), cont) != history.end())){
+            for(std::string tag: currentContTags) {
+                if(tag == mostPopularTag.first) {
+                    returnedShow = cont;
+                }
+                else {
+                    noContentCounter++;
+                    mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1 - noContentCounter);
+                }
+            }
+        }
+    }
+    return returnedShow;
+
 }
 
+std::vector<std::pair<std::string,long>>& User::getPopularTags(){
+    return popularTags;
+}
+
+void User::increaseTag(std::string &tag) {
+    tagsMap[tag]++;
+}
 

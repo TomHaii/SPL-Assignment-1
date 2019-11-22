@@ -20,13 +20,18 @@ public:
     void add_to_user_map(User* user, std::string name);
     void change_user(User* user);
     void erase_user(std::string name);
-    std::string get_last_input();
-//    std::vector<BaseAction*>* getActionsLog();
+    std::string secondInput() const;
+    std::string thirdInput() const;
+    std::vector<BaseAction*>& getActionsLog();
 private:
-    std::string last_input;
+    std::vector<std::string> possibleActions;
+    std::string command;
+    std::string second;
+    std::string third;
     std::vector<Watchable*> content;
     std::vector<BaseAction*> actionsLog;
     std::unordered_map<std::string,User*> userMap;
     User* activeUser;
+
 };
 #endif

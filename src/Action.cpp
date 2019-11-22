@@ -22,6 +22,7 @@ ActionStatus BaseAction::getStatus() const{
 void BaseAction::error(const std::string &_errorMsg) {
     status = ERROR;
     errorMsg = _errorMsg;
+    std::cout<<errorMsg<<std::endl;
 }
 
 void BaseAction::complete() {
@@ -33,34 +34,27 @@ std::string BaseAction::getErrorMsg() const {
 }
 
 void CreateUser::act(Session& sess){
-    std::string input = sess.get_last_input();
-    int len = input.length();
-    if (len < 16){ //not long enough
-        error("invalid input");
-    }
-    if (getStatus() != ERROR) {
-        std::string user_name;
-        std::string algorithm;
-        user_name = input.substr(11, len - 15);
-        algorithm = input.substr(len - 3, 3);
-        std::unordered_map<std::string,User*> map = sess.getUserMap();
-        if (map.count(user_name) > 0) { //username taken
-            error("the user name inserted is already taken");
-        } else if (algorithm != "len" & algorithm != "rer" & algorithm != "gen") { //not an algorithm
-            error("invalid algorithm");
+    std::string user_name = sess.secondInput();
+    std::string algorithm;
+    algorithm = sess.thirdInput();
+    std::unordered_map<std::string,User*> map = sess.getUserMap();
+    if (map.count(user_name) > 0) { //username taken
+        error("the user name inserted is already taken");
+    } else if (algorithm != "len" & algorithm != "rer" & algorithm != "gen") { //not an algorithm
+        error("invalid algorithm");
+    } else {
+        User *new_user;
+        if (algorithm == "len") {
+            new_user = new LengthRecommenderUser(user_name);
+        } else if (algorithm == "rer") {
+            new_user = new RerunRecommenderUser(user_name);
         } else {
-            User *new_user;
-            if (algorithm == "len") {
-                new_user = new LengthRecommenderUser(user_name);
-            } else if (algorithm == "rer") {
-                new_user = new RerunRecommenderUser(user_name);
-            } else {
-                new_user = new GenreRecommenderUser(user_name);
-            }
-            sess.add_to_user_map(new_user, user_name);
-            complete();
+            new_user = new GenreRecommenderUser(user_name);
         }
-    }
+        sess.add_to_user_map(new_user, user_name);
+        complete();
+        }
+
 }
 
 std::string CreateUser::toString() const {
@@ -74,24 +68,16 @@ std::string CreateUser::toString() const {
 }
 
 void ChangeActiveUser::act(Session &sess) {
-    std::string input = sess.get_last_input();
-    int len = input.length();
-    if (len < 12){
-        error("invalid input");
-    }
-    if (getStatus() != ERROR) {
-        std::string user_name;
-        user_name = input.substr(11, len - 11);
-        std::unordered_map<std::string,User*> map = sess.getUserMap();
-        if (map.count(user_name) == 0) {
-            error("no such user");
-        }
-        else{
-            sess.change_user(sess.getUserMap()[user_name]);
-            complete();
-        }
+    std::string user_name = sess.secondInput();
+    std::unordered_map<std::string, User *> map = sess.getUserMap();
+    if (map.count(user_name) == 0) {
+        error("no such user");
+    } else {
+        sess.change_user(sess.getUserMap()[user_name]);
+        complete();
     }
 }
+
 
 std::string ChangeActiveUser::toString() const {
     if (getStatus() == COMPLETED){
@@ -104,24 +90,16 @@ std::string ChangeActiveUser::toString() const {
 }
 
 void DeleteUser::act(Session &sess) {
-    std::string input = sess.get_last_input();
-    int len = input.length();
-    if (len < 12){
-        error("invalid input");
+    std::string user_name = sess.secondInput();
+    std::unordered_map<std::string, User *> map = sess.getUserMap();
+    if (map.count(user_name) == 0) {
+        error("no such user");
+    } else {
+        sess.change_user(map["DEFAULT"]);
+        sess.erase_user(user_name);
+        complete();
     }
-    if (getStatus() != ERROR) {
-        std::string user_name;
-        user_name = input.substr(11, len - 11);
-        std::unordered_map<std::string,User*> map = sess.getUserMap();
-        if (map.count(user_name) == 0) {
-            error("no such user");
-        }
-        else{
-            sess.change_user(map["DEFAULT"]);
-            sess.erase_user(user_name);
-            complete();
-        }
-    }
+
 }
 
 std::string DeleteUser::toString() const {
@@ -135,42 +113,27 @@ std::string DeleteUser::toString() const {
 }
 
 void DuplicateUser::act(Session &sess) {
-    std::string input = sess.get_last_input();
-    int len = input.length();
-    if (len < 11){
-        error("invalid input");
-    }
-    if (getStatus() != ERROR) {
-        std::string orig_user;  std::string new_user;
-        std::string users = input.substr(11, len - 11);
-        int i = 0;
-        while(users.at(i) != ' '){
-            i++;
-        }
-        orig_user =  users.substr(0, i-1);
-        new_user = users.substr(i+1, users.length()-1-i);
-        std::unordered_map<std::string,User*> map = sess.getUserMap();
-        if (map.count(orig_user) == 0) {
-            error("no such user");
-        }
-        else{
-            if (map.count(new_user) > 0){
-                error("the new user name is already taken");
+    std::string orig_user = sess.secondInput();
+    std::string new_user = sess.thirdInput();
+    std::unordered_map<std::string, User *> map = sess.getUserMap();
+    if (map.count(orig_user) == 0) {
+        error("no such user");
+    } else {
+        if (map.count(new_user) > 0) {
+            error("the new user name is already taken");
+        } else {
+            User *curr = map[orig_user];
+            User *duplicated;
+            if (curr->getRecommendedAlgorithm() == "len") {
+                duplicated = new LengthRecommenderUser(new_user);
+            } else if (curr->getRecommendedAlgorithm() == "rer") {
+                duplicated = new RerunRecommenderUser(new_user);
+            } else {
+                duplicated = new GenreRecommenderUser(new_user);
             }
-            else {
-                User *curr = map[orig_user];
-                User *duplicated;
-                if (curr->getRecommendedAlgorithm() == "len") {
-                    duplicated = new LengthRecommenderUser(new_user);
-                } else if (curr->getRecommendedAlgorithm() == "rer") {
-                    duplicated = new RerunRecommenderUser(new_user);
-                } else {
-                    duplicated = new GenreRecommenderUser(new_user);
-                }
-                duplicated->set_history(curr->get_history());
-                sess.add_to_user_map(duplicated, new_user);
-                complete();
-            }
+            duplicated->set_history(curr->get_history());
+            sess.add_to_user_map(duplicated, new_user);
+            complete();
         }
     }
 }
@@ -179,12 +142,12 @@ std::string DuplicateUser::toString() const {
     if (getStatus() == COMPLETED){
         return "DuplicateUser COMPLETED";
     }
-    return ("DuplicateUser ERROR: " + getErrorMsg());\
+    return ("DuplicateUser ERROR: " + getErrorMsg());
 }
 
 void PrintContentList::act(Session &sess){
     for(Watchable* w : sess.getContent()){
-        std::cout << w->toString() + "\n";
+        std::cout << w->toString() <<std::endl;
     }
     complete();
 }
@@ -209,8 +172,7 @@ std::string PrintWatchHistory::toString() const {
 }
 
 void Watch::act(Session &sess) {
-    std::string input = sess.get_last_input();
-    std::string _id = input.substr(6, input.length() - 6);
+    std::string _id = sess.secondInput();;
     long id = atol(_id.c_str());
     if (id > sess.getContent().size()) {
         error("invalid id inserted");
@@ -228,5 +190,27 @@ std::string Watch::toString() const {
     }
     return "Watch COMPLETED";
 }
+
+void PrintActionsLog::act(Session &sess) {
+    std::vector<BaseAction*>& log = sess.getActionsLog();
+    for (BaseAction* action : log){
+            std::cout<<action->toString()<<std::endl;
+    }
+}
+
+std::string PrintActionsLog::toString() const {
+    std::cout << "PrintActionsLog COMPLETED";
+}
+
+void Exit::act(Session& sess) {
+    std::cout <<"LEAVING SPLFLIX\nSee you next time!";
+    complete();
+}
+
+std::string Exit::toString() const {
+    return "Exit COMPLETED";
+}
+
+
 
 

@@ -40,6 +40,8 @@ public:
     virtual std::string toString() const;
     virtual std::string toStringHistory() const;
     virtual Watchable* getNextWatchable(Session&) const;
+    virtual void setNextEpisode(long);
+
 private:
     std::string seriesName;
     int season;

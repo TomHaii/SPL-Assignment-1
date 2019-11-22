@@ -25,7 +25,7 @@ Watchable* Movie::getNextWatchable(Session &session) const {
     return nullptr;
 }
 
-std::vector<std::string> Watchable::getTags() const{
+std::vector<std::string> Watchable:: getTags() const{
     return tags;
 }
 
@@ -78,6 +78,10 @@ std::string Episode::toStringHistory() const {
     }
     std::string output = seriesName +" "+ sea + ep;
     return output;
+}
+
+void Episode::setNextEpisode(long _id) {
+    nextEpisodeId = _id;
 }
 
 int Watchable::getLength() const{

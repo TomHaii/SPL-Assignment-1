@@ -86,21 +86,23 @@ GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name)
 Watchable* GenreRecommenderUser::getRecommendation(Session& s){
     int noContentCounter = 0;
     Watchable* returnedShow = nullptr;
-    sort(s.get_active_user()->getPopularTags().begin(), s.get_active_user()->getPopularTags().end());
+  //  sort(s.get_active_user()->getPopularTags().begin(), s.get_active_user()->getPopularTags().end());
     int popularTagsSize = s.get_active_user()->getPopularTags().size();
     auto mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1);
     std::vector<Watchable*> history = s.get_active_user()->get_history();
+    std::cout << "checheck" << std::endl;
     for(Watchable* cont: s.getContent()){
+        std::cout << "checheck2" << std::endl;
         std::vector<std::string> currentContTags = cont->getTags();
         if(!(std::find(history.begin(), history.end(), cont) != history.end())){
             for(std::string tag: currentContTags) {
                 if(tag == mostPopularTag.first) {
+                    std::cout << "chechec3" << std::endl;
                     returnedShow = cont;
                 }
-                else {
+                    std::cout << "chechec4" << std::endl;
                     noContentCounter++;
                     mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1 - noContentCounter);
-                }
             }
         }
     }

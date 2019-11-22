@@ -20,7 +20,7 @@ public:
     std::vector<Watchable*> get_history() const;
     void addToHistory(Watchable*);
     void set_history(std::vector<Watchable*> _history);
-//    void increaseTag(std::string &tag);
+    void increaseTag(std::string &tag);
     std::vector<std::pair<std::string,long>>& getPopularTags();
 
 protected:

@@ -35,8 +35,7 @@ std::string BaseAction::getErrorMsg() const {
 
 void CreateUser::act(Session& sess){
     std::string user_name = sess.secondInput();
-    std::string algorithm;
-    algorithm = sess.thirdInput();
+    std::string algorithm = sess.thirdInput();
     std::unordered_map<std::string,User*> map = sess.getUserMap();
     if (map.count(user_name) > 0) { //username taken
         error("the user name inserted is already taken");
@@ -173,14 +172,14 @@ std::string PrintWatchHistory::toString() const {
 
 void Watch::act(Session &sess) {
     std::string _id = sess.secondInput();;
-    long id = atol(_id.c_str());
+    long id = std::stol(_id);
     if (id > sess.getContent().size()) {
         error("invalid id inserted");
     } else {
-        Watchable *w = sess.getContent().at(id - 1);
-        std::cout << "Watching " + w->toStringHistory();
-        complete();
+        Watchable* w = sess.getContent().at(id - 1);
+        std::cout << "Watching " + w->toStringHistory()<<std::endl;
         sess.get_active_user()->addToHistory(w);
+        complete();
     }
 }
 

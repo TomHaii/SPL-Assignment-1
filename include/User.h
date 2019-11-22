@@ -28,7 +28,6 @@ protected:
 private:
     const std::string name;
     std::string recommendedAlgorithm;
-    std::unordered_map<std::string, long> tagsMap;
     std::vector<std::pair<std::string, long>> popularTags;
 
 };

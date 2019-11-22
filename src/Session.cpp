@@ -16,7 +16,7 @@ Session::Session(const std::string &configFilePath) {
     json movies = j["movies"];
     long id = 1;
     for(json& movie: movies) {
-        Movie*tmpMovie = new Movie(id, movie["name"], movie["length"], movie["tags"]);
+        Movie* tmpMovie = new Movie(id, movie["name"], movie["length"], movie["tags"]);
         content.push_back(tmpMovie);
         id++;
     }
@@ -43,6 +43,7 @@ Session::Session(const std::string &configFilePath) {
     command=""; second=""; third="";
     User* DEFAULT = new LengthRecommenderUser("DEFAULT");
     userMap["DEFAULT"] = DEFAULT;
+    activeUser = DEFAULT;
     possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
 }
 
@@ -71,7 +72,6 @@ void Session::erase_user(std::string name) {
 std::unordered_map<std::string,User*> Session::getUserMap() const{
     return userMap;
 }
-
 
 
 void Session::start() {
@@ -114,6 +114,7 @@ void Session::start() {
             actionsLog.push_back(content);
         }
         else if(command == "watch"){
+            std::cin >> second;
             BaseAction* watch = new Watch();
             watch->act(*this);
             actionsLog.push_back(watch);
@@ -121,13 +122,13 @@ void Session::start() {
             while (ans != "n"){
                 long historySize = activeUser->get_history().size();
                 Watchable* next = activeUser->get_history().at(historySize-1)->getNextWatchable(*this);
-                std::cout<<"We recommend watching " + next->toString()+", continue watching? [y/n]"<<std::endl;
+                std::cout<<"We recommend watching " + next->toStringHistory()+", continue watching? [y/n]"<<std::endl;
                 std::cin >> ans;
                 if (ans != "y" && ans != "n"){
                     std::cout<<"please choose y or n"<<std::endl;
                 }
                 else if (ans == "y") {
-                    second = next->getId();
+                    second = std::to_string(next->getId());
                     BaseAction* watch2 = new Watch();
                     watch2->act(*this);
                     actionsLog.push_back(watch2);

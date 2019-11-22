@@ -4,7 +4,9 @@
 #include <algorithm>
 
 
-User::User(const std::string& _name):name(_name), recommendedAlgorithm("len"){}
+User::User(const std::string& _name):name(_name), recommendedAlgorithm("len"){
+    history;
+}
 
 std::string User::getName() const {
     return name;
@@ -22,11 +24,11 @@ std::vector<Watchable*> User::get_history() const{
     return history;
 }
 
-void User::set_history(std::vector<Watchable *> _history) {
+void User::set_history(std::vector<Watchable*> _history) {
     history = _history;
 }
 
-void User::addToHistory(Watchable *w) {
+void User::addToHistory(Watchable* w) {
     history.push_back(w);
 }
 
@@ -110,9 +112,9 @@ std::vector<std::pair<std::string,long>>& User::getPopularTags(){
     return popularTags;
 }
 
-void User::increaseTag(std::string &tag) {
-    if(std::find(history.begin(), history.end(), tag) != history.end()){
-
-    }
-}
+//void User::increaseTag(std::string &tag) {
+//    if(std::find(history.begin(), history.end(), tag) != history.end()){
+//
+//    }
+//}
 

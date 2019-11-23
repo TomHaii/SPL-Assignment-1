@@ -32,7 +32,7 @@ std::vector<std::string> Watchable:: getTags() const{
 
 Watchable* Episode::getNextWatchable(Session & _sess) const {
     if( nextEpisodeId != -1 && _sess.getContent().at(nextEpisodeId)->getName() == seriesName){
-        return _sess.getContent().at(nextEpisodeId-1);
+        return _sess.getContent().at(nextEpisodeId);
     }
     return _sess.get_active_user().getRecommendation(_sess);
 }

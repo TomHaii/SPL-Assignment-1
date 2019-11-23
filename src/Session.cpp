@@ -7,6 +7,7 @@
 #include <fstream>
 #include "../include/Watchable.h"
 #include "../include/Session.h"
+#include <sstream>
 
 using json = nlohmann::json;
 Session::Session(const std::string &configFilePath) {
@@ -29,7 +30,7 @@ Session::Session(const std::string &configFilePath) {
             for (long e = 1; e <= episodesNumber; e++) {
                 Episode *tmpEpisode = new Episode(id, tmp_series["name"], tmp_series["episode_length"], k + 1, e, tmp_series["tags"]);
                 if (!last || (e+1 <= episodesNumber)){
-                    tmpEpisode->setNextEpisode(id+1);
+                    tmpEpisode->setNextEpisode(id);
                 }
                 else{
                     tmpEpisode->setNextEpisode(-1);
@@ -77,32 +78,31 @@ void Session::start() {
     std::cout<<"SPLFLIX is now on!"<<std::endl;
     while (command != "exit") {
         std::cout << "what would you like to do? ";
-        std::cin >> command;
+        std::string inputLine;
+        getline(std::cin, inputLine);
+        std::istringstream iss(inputLine);
+        std::getline(iss, command, ' ');
+        std::getline(iss, second, ' ');
+        std::getline(iss, third, ' ');
         if(!(std::find(possibleActions.begin(), possibleActions.end(), command) != possibleActions.end())) {
             std::cout << "Oops! not a valid commend"<<std::endl;
         }
         else if(command == "createuser"){
-            std::cin >> second;
-            std::cin >> third;
             BaseAction* createuser = new CreateUser();
             createuser->act(*this);
             actionsLog.push_back(createuser);
         }
         else if(command == "changeuser"){
-            std::cin >> second;
             BaseAction* changeuser = new ChangeActiveUser();
             changeuser->act(*this);
             actionsLog.push_back(changeuser);
         }
         else if(command == "deleteuser"){
-            std::cin >> second;
             BaseAction* deleteuser = new DeleteUser();
             deleteuser->act(*this);
             actionsLog.push_back(deleteuser);
         }
         else if(command == "dupuser"){
-            std::cin >> second;
-            std::cin >> third;
             BaseAction* dupuser = new DuplicateUser();
             dupuser->act(*this);
             actionsLog.push_back(dupuser);
@@ -113,7 +113,6 @@ void Session::start() {
             actionsLog.push_back(content);
         }
         else if(command == "watch"){
-            std::cin >> second;
             BaseAction* watch = new Watch();
             watch->act(*this);
             actionsLog.push_back(watch);
@@ -122,7 +121,7 @@ void Session::start() {
                 long historySize = activeUser->get_history().size();
                 Watchable* next = activeUser->get_history().at(historySize-1)->getNextWatchable(*this);
                 std::cout<<"We recommend watching " + next->toStringHistory()+", continue watching? [y/n]"<<std::endl;
-                std::cin >> ans;
+                getline(std::cin, ans);
                 if (ans != "y" && ans != "n"){
                     std::cout<<"please choose y or n"<<std::endl;
                 }

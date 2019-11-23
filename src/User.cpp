@@ -2,11 +2,10 @@
 #include "../include/User.h"
 #include "../include/Session.h"
 #include <algorithm>
+#include <vector>
 
 
-User::User(const std::string& _name):name(_name), recommendedAlgorithm("len"){
-
-}
+User::User(const std::string& _name):name(_name), recommendedAlgorithm("len"){}
 
 std::string User::getName() const {
     return name;
@@ -28,25 +27,16 @@ void User::set_history(std::vector<Watchable*> _history) {
     history = _history;
 }
 
-void User::addToHistory(Watchable* w) {
-    history.push_back(w);
-}
 
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
     setRecommendedAlgorithm("len");
 }
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
-    unsigned int sum = 0;
     Watchable* returnedShow = nullptr;
-    std::vector<Watchable*> history = s.get_active_user().get_history();
-    for(Watchable*& watched: history){
-        sum = sum + watched->getLength();
-    }
-    int desiredLength = sum / history.size();
     int bestDifference = std::numeric_limits<int>::max();
     for(Watchable* cont: s.getContent()){
-        int difference = abs(desiredLength - cont->getLength());
+        int difference = abs(average - cont->getLength());
         if((!(std::find(history.begin(), history.end(), cont) != history.end())) && difference < bestDifference) {
             bestDifference = difference;
             returnedShow = cont;
@@ -55,88 +45,109 @@ Watchable* LengthRecommenderUser::getRecommendation(Session& s){
     return returnedShow;
 }
 
+void LengthRecommenderUser::addToHistory(Watchable* w) {
+    long sum = average*history.size();
+    sum += w->getLength();
+    average = sum/(history.size()+1);
+    history.push_back(w);
+}
+
+
+
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
     setRecommendedAlgorithm("rer");
-    lastRecommenedWatchable = nullptr;
+    lastRecommendation = -1;
 }
 
 Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
-    bool foundShow = false;
-    Watchable *returnedShow = nullptr;
-    if(history.size() == 1) {
-        lastRecommenedWatchable = get_history().at(0);
-        returnedShow = lastRecommenedWatchable;
-        foundShow = true;
-    }
-    int historySize = s.get_active_user().get_history().size();
-    for (int i = 0; !foundShow && i < historySize; i++) {
-        if (history.at(i) == lastRecommenedWatchable) {
-            returnedShow = s.get_active_user().get_history().at((i + 1) % historySize);
-            foundShow = true;
-            lastRecommenedWatchable = returnedShow;
-        }
-    }
-    return returnedShow;
+    lastRecommendation = (lastRecommendation +1 ) % (long)(history.size());
+    return history.at(lastRecommendation);
 }
 
-bool User::compareTagsPairs(const std::pair<std::string,long> &pair1,const std::pair<std::string,long> &pair2) {
-    return pair2.second > pair1.second;
+void RerunRecommenderUser::addToHistory(Watchable* w) {
+    history.push_back(w);
 }
 
 GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name){
     setRecommendedAlgorithm("gen");
-
+    mostPopularTag.first="";
+    mostPopularTag.second=-1;
 }
+
 Watchable* GenreRecommenderUser::getRecommendation(Session& s){
-    int noContentCounter = 0;
-    Watchable* returnedShow = nullptr;
-    bool foundShow = false;
-    sort(s.get_active_user().getPopularTags().begin(), s.get_active_user().getPopularTags().end(), compareTagsPairs);
-    for(auto& c: s.get_active_user().getPopularTags()){
-        std::cout << c.first << std::endl;
-    }
-    int popularTagsSize = s.get_active_user().getPopularTags().size();
-    auto mostPopularTag = s.get_active_user().getPopularTags().at(popularTagsSize - 1);
-    //Add lexicographic order incase there is two popular tags
-    std::vector<Watchable*> history = s.get_active_user().get_history();
-    while(!foundShow) {
-        std::cout << "popular tag is  " + mostPopularTag.first << std::endl;
-        //check why it always return the last episode of the most popular tagged watchable
-        for (Watchable *&cont: s.getContent()) {
-            if (!(std::find(history.begin(), history.end(), cont) != history.end())) {
-                std::vector<std::string> currentContTags = cont->getTags();
-                for (std::string &tag: currentContTags) {
-                    if (tag == mostPopularTag.first) {
-                        returnedShow = cont;
-                        foundShow = true;
-                    }
+    std::string wantedTag = mostPopularTag.first;
+    std::string str;
+    while (wantedTag != str) {
+        for (Watchable *w : s.getContent()) {
+            std::vector<std::string> tags = w->getTags();
+            if (std::find(tags.begin(), tags.end(), wantedTag) != tags.end()) {
+                if (!(std::find(history.begin(), history.end(), w) != history.end())) {
+                    return  &*w;
                 }
             }
         }
-
-        noContentCounter++;
-        mostPopularTag = s.get_active_user().getPopularTags().at(popularTagsSize - 1 - noContentCounter);
+        str = getNextPopular(wantedTag);
     }
-    return returnedShow;
-
+    return nullptr;
 }
 
-std::vector<std::pair<std::string,long>>& User::getPopularTags(){
-    return popularTags;
-}
 
-void User::increaseTag(std::string &tag) {
-    int index = 0;
-    bool tagNotFound = true;
-    for(std::pair<std::string, long>& p: popularTags){
-        if(p.first == tag){
-            p.second++;
-            tagNotFound = false;
+void GenreRecommenderUser::increaseTag(std::string &tag) {
+    bool found = false;
+    if(!popularTags.empty()) {
+        for (std::pair<std::string, long> &p: popularTags) {
+            if (p.first == tag) {
+                p.second += 1;
+                found = true;
+            }
         }
-        index++;
     }
-    if(tagNotFound){
-        popularTags.emplace_back(tag,1);
+    if(!found){
+        std::pair<std::string, long> p (tag,1);
+        popularTags.push_back(p);
+    }
+    if (tag == mostPopularTag.first) {
+        mostPopularTag.second += 1;
     }
 }
+
+
+void GenreRecommenderUser::addToHistory(Watchable* w) {
+    history.push_back(w);
+    std::pair<std::string, long> returned;
+    for (std::string tag : w->getTags()) {
+        increaseTag(tag);
+    }
+    std::string tag = mostPopularTag.first;
+    long num = mostPopularTag.second;
+    for (std::pair<std::string, long> &p : popularTags) {
+        if ((p.second > num) || (p.second == num && p.first.compare(tag)<0)){
+            num = p.second;
+            tag = p.first;
+        }
+    }
+    mostPopularTag.first = tag;
+    mostPopularTag.second = num;
+}
+
+std::string GenreRecommenderUser::getNextPopular(std::string curr) {
+    std::string next = curr;
+    long currNum=0;
+    for (std::pair<std::string, long>& p : popularTags){
+        if (p.first == curr){
+            currNum =p.second;
+        }
+    }
+    for (std::pair<std::string, long>& p : popularTags){
+        if (p.first != curr && p.second == currNum && p.first.compare(next)<0){
+            next = p.first;
+        }
+        else if (p.first != curr && p.second >currNum){
+            next = p.first;
+            currNum = p.second;
+        }
+    }
+    return next;
+}
+
 

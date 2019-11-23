@@ -16,19 +16,18 @@ public:
     virtual Watchable* getRecommendation(Session& s) = 0;
     std::string getName() const;
     std::string getRecommendedAlgorithm() const;
-    void setRecommendedAlgorithm(std::string) ;
+
     std::vector<Watchable*> get_history() const;
-    void addToHistory(Watchable*);
     void set_history(std::vector<Watchable*> _history);
-    void increaseTag(std::string &tag);
-    std::vector<std::pair<std::string,long>>& getPopularTags();
-    static bool compareTagsPairs(const std::pair<std::string, long> &pair1, const std::pair<std::string,long> &pair2);
+    virtual void addToHistory(Watchable*) = 0;
+
 protected:
+    void setRecommendedAlgorithm(std::string) ;
     std::vector<Watchable*> history;
 private:
     const std::string name;
     std::string recommendedAlgorithm;
-    std::vector<std::pair<std::string, long>> popularTags;
+
 
 };
 
@@ -37,24 +36,31 @@ class LengthRecommenderUser : public User {
 public:
     LengthRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
+    virtual void addToHistory(Watchable*);
 private:
+    long average;
 };
 
 class RerunRecommenderUser : public User {
 public:
     RerunRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
-
-
+    void addToHistory(Watchable*);
 private:
-    Watchable* lastRecommenedWatchable;
+    long lastRecommendation;
 };
 
 class GenreRecommenderUser : public User {
 public:
+    void addToHistory(Watchable*);
     GenreRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
+    void increaseTag(std::string &tag);
+    std::string getNextPopular(std::string);
 private:
+    std::pair<std::string, long> mostPopularTag;
+    std::vector<std::pair<std::string, long>> popularTags;
+
 };
 
 #endif

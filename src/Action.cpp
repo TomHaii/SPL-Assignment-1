@@ -91,11 +91,11 @@ void DeleteUser::act(Session &sess) {
     std::unordered_map<std::string, User *> map = sess.getUserMap();
     if (map.count(user_name) == 0) {
         error("no such user");
-    } else {
+    } else if (sess.get_active_user().getName() == user_name) {
         sess.change_user(map["DEFAULT"]);
+    }
         sess.erase_user(user_name);
         complete();
-    }
 }
 
 std::string DeleteUser::toString() const {
@@ -175,9 +175,6 @@ void Watch::act(Session &sess) {
         Watchable* w = sess.getContent().at(id - 1);
         std::cout << "Watching " + w->toStringHistory()<<std::endl;
         sess.get_active_user().addToHistory(w);
-        for(std::string &tag: w->getTags()){
-            sess.get_active_user().increaseTag(tag);
-        }
         complete();
     }
 }

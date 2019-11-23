@@ -24,7 +24,7 @@ Session::Session(const std::string &configFilePath) {
     for (json& tmp_series: series) {
         json seasonsList = tmp_series.at("seasons");
         for (int k = 0; k < seasonsList.size(); k++) {
-            bool last = (k==seasonsList.size());
+            bool last = (k==seasonsList.size()-1);
             long episodesNumber = tmp_series.at("seasons")[k];
             for (long e = 1; e <= episodesNumber; e++) {
                 Episode *tmpEpisode = new Episode(id, tmp_series["name"], tmp_series["episode_length"], k + 1, e, tmp_series["tags"]);
@@ -39,7 +39,6 @@ Session::Session(const std::string &configFilePath) {
             }
         }
     }
-    last = nullptr;
     command=""; second=""; third="";
     User* DEFAULT = new LengthRecommenderUser("DEFAULT");
     userMap["DEFAULT"] = DEFAULT;

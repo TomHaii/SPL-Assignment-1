@@ -164,5 +164,18 @@ std::vector<BaseAction*>& Session::getActionsLog(){
 
 
 Session::~Session() {
-
+    delete(activeUser);
+    clear();
 }
+
+void Session::clear(){
+    for(auto cont:content){
+        delete(cont);
+    }
+    for(auto action: actionsLog){
+        delete(action);
+    }
+    for(auto user: userMap){
+        delete(user.second);
+    }
+};

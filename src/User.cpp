@@ -5,7 +5,7 @@
 
 
 User::User(const std::string& _name):name(_name), recommendedAlgorithm("len"){
-    history;
+
 }
 
 std::string User::getName() const {
@@ -57,22 +57,24 @@ Watchable* LengthRecommenderUser::getRecommendation(Session& s){
 
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
     setRecommendedAlgorithm("rer");
-    if (!history.empty()) {
-        lastRecommenedWatchable = get_history().at(0);
-    }
+    lastRecommenedWatchable = nullptr;
 }
 
 Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
-    Watchable *returnedShow = nullptr;
     bool foundShow = false;
+    Watchable *returnedShow = nullptr;
+    if(history.size() == 1) {
+        lastRecommenedWatchable = get_history().at(0);
+        returnedShow = lastRecommenedWatchable;
+        foundShow = true;
+    }
     int historySize = s.get_active_user().get_history().size();
     for (int i = 0; !foundShow && i < historySize; i++) {
-        if (std::find(history.begin(), history.end(), lastRecommenedWatchable) != history.end()) {
+        if (history.at(i) == lastRecommenedWatchable) {
             returnedShow = s.get_active_user().get_history().at((i + 1) % historySize);
             foundShow = true;
             lastRecommenedWatchable = returnedShow;
         }
-
     }
     return returnedShow;
 }
@@ -106,7 +108,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s){
                 }
             }
         }
-        // NEED TO FIX THAT SHIT
+//         NEED TO FIX THAT SHIT
 //        if(!foundShow){
 //            noContentCounter++;
 //            mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1 - noContentCounter);

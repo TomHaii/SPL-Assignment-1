@@ -23,6 +23,7 @@ public:
     std::string secondInput() const;
     std::string thirdInput() const;
     std::vector<BaseAction*>& getActionsLog();
+    void clear();
 private:
     Watchable* last;
     std::vector<std::string> possibleActions;

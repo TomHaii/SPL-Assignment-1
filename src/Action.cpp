@@ -179,7 +179,7 @@ void Watch::act(Session &sess) {
         Watchable* w = sess.getContent().at(id - 1);
         std::cout << "Watching " + w->toStringHistory()<<std::endl;
         sess.get_active_user()->addToHistory(w);
-        for(std::string tag: w->getTags()){
+        for(std::string &tag: w->getTags()){
             sess.get_active_user()->increaseTag(tag);
         }
         complete();

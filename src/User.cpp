@@ -40,7 +40,7 @@ Watchable* LengthRecommenderUser::getRecommendation(Session& s){
     unsigned int sum = 0;
     Watchable* returnedShow = nullptr;
     std::vector<Watchable*> history = s.get_active_user()->get_history();
-    for(Watchable *watched: history){
+    for(Watchable*& watched: history){
         sum = sum + watched->getLength();
     }
     int desiredLength = sum / history.size();
@@ -94,11 +94,15 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s){
     auto mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1);
     std::vector<Watchable*> history = s.get_active_user()->get_history();
     std::cout << "checheck" << std::endl;
-    for(Watchable* cont: s.getContent()){
-        std::cout << "checheck2" << std::endl;
-        std::vector<std::string> currentContTags = cont->getTags();
+
+    for(Watchable*& cont: s.getContent()){
         if(!(std::find(history.begin(), history.end(), cont) != history.end())){
-            for(std::string tag: currentContTags) {
+            std::cout << "checheck2" << std::endl;
+
+            std::cout << "Test: Didn't watch " + cont->getTags()[0] << std::endl;
+
+            std::vector<std::string> currentContTags = cont->getTags();
+            for(std::string &tag: currentContTags) {
                 if(tag == mostPopularTag.first) {
                     std::cout << "chechec3" << std::endl;
                     returnedShow = cont;
@@ -106,10 +110,11 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s){
                 }
             }
         }
-        if(!foundShow){
-            noContentCounter++;
-            mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1 - noContentCounter);
-        }
+        // NEED TO FIX THAT SHIT
+//        if(!foundShow){
+//            noContentCounter++;
+//            mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1 - noContentCounter);
+//        }
     }
     return returnedShow;
 
@@ -130,6 +135,7 @@ void User::increaseTag(std::string &tag) {
         index++;
     }
     if(tagNotFound){
+        std::cout << "Added Tag" + tag << std::endl;
         popularTags.emplace_back(tag,1);
     }
 }

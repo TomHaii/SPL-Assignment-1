@@ -45,6 +45,13 @@
       "seasons": [22, 22, 20, 24, 24, 24, 24, 24, 24, 24],
       "tags": ["Comedy",
                "Romantic"]
+    },
+    {
+      "name": "Stam Sidra",
+      "episode_length": 55,
+      "seasons": [22],
+      "tags": ["Fantasy",
+        "Drama"]
     }
   ]
 }

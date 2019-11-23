@@ -36,8 +36,7 @@ std::string BaseAction::getErrorMsg() const {
 void CreateUser::act(Session& sess){
     std::string user_name = sess.secondInput();
     std::string algorithm = sess.thirdInput();
-    std::unordered_map<std::string,User*> map = sess.getUserMap();
-    if (map.count(user_name) > 0) { //username taken
+    if (sess.getUserMap().count(user_name) > 0) { //username taken
         error("the user name inserted is already taken");
     } else if (algorithm != "len" & algorithm != "rer" & algorithm != "gen") { //not an algorithm
         error("invalid algorithm");
@@ -97,7 +96,6 @@ void DeleteUser::act(Session &sess) {
         sess.erase_user(user_name);
         complete();
     }
-
 }
 
 std::string DeleteUser::toString() const {

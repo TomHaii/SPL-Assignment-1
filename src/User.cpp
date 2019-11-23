@@ -92,27 +92,30 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s){
     Watchable* returnedShow = nullptr;
     bool foundShow = false;
     sort(s.get_active_user().getPopularTags().begin(), s.get_active_user().getPopularTags().end(), compareTagsPairs);
+    for(auto& c: s.get_active_user().getPopularTags()){
+        std::cout << c.first << std::endl;
+    }
     int popularTagsSize = s.get_active_user().getPopularTags().size();
     auto mostPopularTag = s.get_active_user().getPopularTags().at(popularTagsSize - 1);
+    //Add lexicographic order incase there is two popular tags
     std::vector<Watchable*> history = s.get_active_user().get_history();
-
-    for(Watchable*& cont: s.getContent()){
-        if(!(std::find(history.begin(), history.end(), cont) != history.end())){
-         //   std::cout << "checheck2" << std::endl;
-       //     std::cout << "Test: Didn't watch " + cont->getTags()[0] << std::endl;
-            std::vector<std::string> currentContTags = cont->getTags();
-            for(std::string &tag: currentContTags) {
-                if(tag == mostPopularTag.first) {
-                    returnedShow = cont;
-                    foundShow = true;
+    while(!foundShow) {
+        std::cout << "popular tag is  " + mostPopularTag.first << std::endl;
+        //check why it always return the last episode of the most popular tagged watchable
+        for (Watchable *&cont: s.getContent()) {
+            if (!(std::find(history.begin(), history.end(), cont) != history.end())) {
+                std::vector<std::string> currentContTags = cont->getTags();
+                for (std::string &tag: currentContTags) {
+                    if (tag == mostPopularTag.first) {
+                        returnedShow = cont;
+                        foundShow = true;
+                    }
                 }
             }
         }
-//         NEED TO FIX THAT SHIT
-//        if(!foundShow){
-//            noContentCounter++;
-//            mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1 - noContentCounter);
-//        }
+
+        noContentCounter++;
+        mostPopularTag = s.get_active_user().getPopularTags().at(popularTagsSize - 1 - noContentCounter);
     }
     return returnedShow;
 
@@ -133,7 +136,6 @@ void User::increaseTag(std::string &tag) {
         index++;
     }
     if(tagNotFound){
-        std::cout << "Added Tag" + tag << std::endl;
         popularTags.emplace_back(tag,1);
     }
 }

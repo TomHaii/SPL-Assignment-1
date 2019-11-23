@@ -39,7 +39,7 @@ LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_na
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
     unsigned int sum = 0;
     Watchable* returnedShow = nullptr;
-    std::vector<Watchable*> history = s.get_active_user()->get_history();
+    std::vector<Watchable*> history = s.get_active_user().get_history();
     for(Watchable*& watched: history){
         sum = sum + watched->getLength();
     }
@@ -65,10 +65,10 @@ RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name)
 Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
     Watchable *returnedShow = nullptr;
     bool foundShow = false;
-    int historySize = s.get_active_user()->get_history().size();
+    int historySize = s.get_active_user().get_history().size();
     for (int i = 0; !foundShow && i < historySize; i++) {
         if (std::find(history.begin(), history.end(), lastRecommenedWatchable) != history.end()) {
-            returnedShow = s.get_active_user()->get_history().at((i + 1) % historySize);
+            returnedShow = s.get_active_user().get_history().at((i + 1) % historySize);
             foundShow = true;
             lastRecommenedWatchable = returnedShow;
         }
@@ -89,22 +89,18 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s){
     int noContentCounter = 0;
     Watchable* returnedShow = nullptr;
     bool foundShow = false;
-    sort(s.get_active_user()->getPopularTags().begin(), s.get_active_user()->getPopularTags().end(), compareTagsPairs);
-    int popularTagsSize = s.get_active_user()->getPopularTags().size();
-    auto mostPopularTag = s.get_active_user()->getPopularTags().at(popularTagsSize - 1);
-    std::vector<Watchable*> history = s.get_active_user()->get_history();
-    std::cout << "checheck" << std::endl;
+    sort(s.get_active_user().getPopularTags().begin(), s.get_active_user().getPopularTags().end(), compareTagsPairs);
+    int popularTagsSize = s.get_active_user().getPopularTags().size();
+    auto mostPopularTag = s.get_active_user().getPopularTags().at(popularTagsSize - 1);
+    std::vector<Watchable*> history = s.get_active_user().get_history();
 
     for(Watchable*& cont: s.getContent()){
         if(!(std::find(history.begin(), history.end(), cont) != history.end())){
-            std::cout << "checheck2" << std::endl;
-
-            std::cout << "Test: Didn't watch " + cont->getTags()[0] << std::endl;
-
+         //   std::cout << "checheck2" << std::endl;
+       //     std::cout << "Test: Didn't watch " + cont->getTags()[0] << std::endl;
             std::vector<std::string> currentContTags = cont->getTags();
             for(std::string &tag: currentContTags) {
                 if(tag == mostPopularTag.first) {
-                    std::cout << "chechec3" << std::endl;
                     returnedShow = cont;
                     foundShow = true;
                 }

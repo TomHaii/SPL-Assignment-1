@@ -23,7 +23,7 @@ Episode::Episode(long _id, const std::string& _seriesName,int _length, int _seas
         Watchable(_id, _length, _tags), season(_season), episode(_episode), seriesName(_seriesName), nextEpisodeId(0){}
 
 Watchable* Movie::getNextWatchable(Session &session) const {
-    return session.get_active_user()->getRecommendation(session);
+    return session.get_active_user().getRecommendation(session);
 }
 
 std::vector<std::string> Watchable:: getTags() const{
@@ -31,9 +31,22 @@ std::vector<std::string> Watchable:: getTags() const{
 }
 
 Watchable* Episode::getNextWatchable(Session & _sess) const {
-    return nullptr;
+    Watchable *nextEpisode = nullptr;
+    if(nextEpisodeId < _sess.getContent().size()) {
+        nextEpisode = _sess.getContent().at(nextEpisodeId);
+        if (_sess.getContent().at(nextEpisodeId)->getName() == seriesName) {
+            return nextEpisode;
+        }
+    }
+    return _sess.get_active_user().getRecommendation(_sess);
 }
 
+std::string Episode::getName() const {
+    return seriesName;
+}
+std::string Movie::getName() const {
+    return name;
+}
 
 long Watchable::getId() const {
     return id;

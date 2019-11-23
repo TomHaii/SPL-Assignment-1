@@ -29,7 +29,7 @@ Session::Session(const std::string &configFilePath) {
             for (long e = 1; e <= episodesNumber; e++) {
                 Episode *tmpEpisode = new Episode(id, tmp_series["name"], tmp_series["episode_length"], k + 1, e, tmp_series["tags"]);
                 if (!last || (e+1 <= episodesNumber)){
-                    tmpEpisode->setNextEpisode(id+1);
+                    tmpEpisode->setNextEpisode(id);
                 }
                 else{
                     tmpEpisode->setNextEpisode(-1);
@@ -51,8 +51,8 @@ std::vector<Watchable*> Session::getContent() const {
     return content;
 }
 
-User* Session::get_active_user() const{
-    return activeUser;
+User& Session::get_active_user(){
+    return *activeUser;
 }
 
 std::string Session::secondInput() const {

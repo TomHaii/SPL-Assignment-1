@@ -53,7 +53,6 @@ void CreateUser::act(Session& sess){
         sess.add_to_user_map(new_user, user_name);
         complete();
         }
-
 }
 
 std::string CreateUser::toString() const {
@@ -156,10 +155,9 @@ std::string PrintContentList::toString() const {
 }
 
 void PrintWatchHistory::act(Session &sess){
-    User *active = sess.get_active_user();
-    std::string output = "watch history for " + active->getName() + ":\n";
+    std::string output = "watch history for " + sess.get_active_user().getName() + ":\n";
     int i = 0;
-    for(Watchable* w : active->get_history()){
+    for(Watchable* w : sess.get_active_user().get_history()){
         output += std::to_string(i) + w->toStringHistory() + "\n";
         i++;
     }
@@ -178,9 +176,9 @@ void Watch::act(Session &sess) {
     } else {
         Watchable* w = sess.getContent().at(id - 1);
         std::cout << "Watching " + w->toStringHistory()<<std::endl;
-        sess.get_active_user()->addToHistory(w);
+        sess.get_active_user().addToHistory(w);
         for(std::string &tag: w->getTags()){
-            sess.get_active_user()->increaseTag(tag);
+            sess.get_active_user().increaseTag(tag);
         }
         complete();
     }

@@ -15,7 +15,7 @@ public:
     Session(const std::string &configFilePath);
     ~Session();
     void start();
-    User* get_active_user() const;
+    User& get_active_user();
     std::unordered_map<std::string,User*> getUserMap() const;
     void add_to_user_map(User* user, std::string name);
     void change_user(User* user);

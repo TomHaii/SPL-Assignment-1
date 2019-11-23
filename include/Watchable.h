@@ -17,6 +17,8 @@ public:
     virtual std::string toString() const = 0;
     virtual std::string toStringHistory() const = 0;
     virtual Watchable* getNextWatchable(Session&) const = 0;
+    virtual std::string getName() const = 0;
+
 private:
     const long id;
     int length;
@@ -29,6 +31,8 @@ public:
     virtual std::string toString() const;
     virtual std::string toStringHistory() const;
     virtual Watchable* getNextWatchable(Session&) const;
+    virtual std::string getName() const;
+
 private:
     std::string name;
 };
@@ -41,7 +45,7 @@ public:
     virtual std::string toStringHistory() const;
     virtual Watchable* getNextWatchable(Session&) const;
     virtual void setNextEpisode(long);
-
+    virtual std::string getName() const;
 private:
     std::string seriesName;
     int season;

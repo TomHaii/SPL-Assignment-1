@@ -22,7 +22,7 @@ public:
     void set_history(std::vector<Watchable*> _history);
     void increaseTag(std::string &tag);
     std::vector<std::pair<std::string,long>>& getPopularTags();
-
+    static bool compareTagsPairs(const std::pair<std::string, long> &pair1, const std::pair<std::string,long> &pair2);
 protected:
     std::vector<Watchable*> history;
 private:

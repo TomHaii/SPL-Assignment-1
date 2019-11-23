@@ -29,7 +29,7 @@ Session::Session(const std::string &configFilePath) {
             for (long e = 1; e <= episodesNumber; e++) {
                 Episode *tmpEpisode = new Episode(id, tmp_series["name"], tmp_series["episode_length"], k + 1, e, tmp_series["tags"]);
                 if (!last || (e+1 <= episodesNumber)){
-                    tmpEpisode->setNextEpisode(id);
+                    tmpEpisode->setNextEpisode(id+1);
                 }
                 else{
                     tmpEpisode->setNextEpisode(-1);

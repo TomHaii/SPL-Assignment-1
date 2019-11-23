@@ -32,7 +32,7 @@ std::vector<std::string> Watchable:: getTags() const{
 
 Watchable* Episode::getNextWatchable(Session & _sess) const {
     if( nextEpisodeId != -1 && _sess.getContent().at(nextEpisodeId)->getName() == seriesName){
-        return _sess.getContent().at(nextEpisodeId);
+        return _sess.getContent().at(nextEpisodeId-1);
     }
     return _sess.get_active_user().getRecommendation(_sess);
 }
@@ -61,7 +61,7 @@ std::string Movie::toString() const {
 std::string Episode::toString() const {
     std::string output =  std::to_string(getId()) +". " + toStringHistory() + " ";
     output += std::to_string(getLength()) + " minutes [";
-    for (std::string s : getTags()) {
+    for (const std::string& s : getTags()) {
         output += s + ", ";
     }
     output = output.substr(0, output.length() - 2);

@@ -135,14 +135,14 @@ std::string GenreRecommenderUser::getNextPopular(std::string curr) {
     long currNum=0;
     for (std::pair<std::string, long>& p : popularTags){
         if (p.first == curr){
-            currNum =p.second;
+            currNum = p.second;
         }
     }
     for (std::pair<std::string, long>& p : popularTags){
         if (p.first != curr && p.second == currNum && p.first.compare(next)<0){
             next = p.first;
         }
-        else if (p.first != curr && p.second >currNum){
+        else if (p.first != curr && p.second > currNum){
             next = p.first;
             currNum = p.second;
         }

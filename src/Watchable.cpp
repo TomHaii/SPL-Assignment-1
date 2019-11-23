@@ -31,12 +31,8 @@ std::vector<std::string> Watchable:: getTags() const{
 }
 
 Watchable* Episode::getNextWatchable(Session & _sess) const {
-    Watchable *nextEpisode = nullptr;
-    if(nextEpisodeId < _sess.getContent().size()) {
-        nextEpisode = _sess.getContent().at(nextEpisodeId);
-        if (_sess.getContent().at(nextEpisodeId)->getName() == seriesName) {
-            return nextEpisode;
-        }
+    if( nextEpisodeId != -1){
+        return _sess.getContent().at(nextEpisodeId);
     }
     return _sess.get_active_user().getRecommendation(_sess);
 }

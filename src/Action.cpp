@@ -154,9 +154,10 @@ std::string PrintContentList::toString() const {
 
 void PrintWatchHistory::act(Session &sess){
     std::string output = "watch history for " + sess.get_active_user().getName() + ":\n";
-    int i = 0;
-    for(Watchable* w : sess.get_active_user().get_history()){
-        output += std::to_string(i) + w->toStringHistory() + "\n";
+    std::cout<<"watch history for "+ sess.get_active_user().getName() + ":"<<std::endl;
+    int i = 1;
+    for(Watchable* w : sess.get_active_user().get_history()) {
+        std::cout << std::to_string(i) + ". " + w->toStringHistory() << std::endl;
         i++;
     }
     complete();

@@ -81,7 +81,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
     long i = 1;
     while (!wantedTag.empty()) {
         i++;
-        for (Watchable *w : s.getContent()) {
+        for (Watchable *&w : s.getContent()) {
             std::vector<std::string> tags = w->getTags();
             if ((std::find(tags.begin(), tags.end(), wantedTag) != tags.end() &&
                  (!(std::find(history.begin(), history.end(), *&w) != history.end())))) {
@@ -92,12 +92,12 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
         wantedTag = getNextPopular(prevTags);
     }
     return next;
-    //hi
+
 }
 
 void GenreRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
-    for (std::string tag : w->getTags()) {
+    for (std::string &tag : w->getTags()) {
         tagsMap[tag]++;
         if (tagsMap.count(tag) == 0){
             tagsMap[tag] = 1;

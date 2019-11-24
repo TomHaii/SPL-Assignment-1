@@ -6,6 +6,8 @@
 #include <fstream>
 #include "../include/Watchable.h"
 #include "../include/Session.h"
+#include "../include/Action.h"
+
 #include <unordered_map>
 
 
@@ -21,7 +23,7 @@ ActionStatus BaseAction::getStatus() const{
 
 void BaseAction::error(const std::string &_errorMsg) {
     status = ERROR;
-    errorMsg = _errorMsg;
+    errorMsg.assign(_errorMsg);
     std::cout << errorMsg << std::endl;
 }
 
@@ -31,6 +33,10 @@ void BaseAction::complete() {
 
 std::string BaseAction::getErrorMsg() const {
     std::cout<<errorMsg<<std::endl;
+    return errorMsg;
+}
+
+std::string BaseAction::getError() const {
     return errorMsg;
 }
 
@@ -202,7 +208,7 @@ void PrintActionsLog::act(Session &sess) {
             std::cout <<action->toString() +" COMPLETED" << std::endl;
         }
         else{
-            std::cout << action->toString() + " ERROR: " + getErrorMsg() << std::endl;
+            std::cout << action->toString() + " ERROR: " + action->getError() << std::endl;
         }
 
     }

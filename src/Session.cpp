@@ -111,9 +111,9 @@ void Session::start() {
             actionsLog.push_back(dupuser);
         }
         else if(command == "content"){
-            BaseAction* content = new PrintContentList();
-            content->act(*this);
-            actionsLog.push_back(content);
+            BaseAction* cont = new PrintContentList();
+            cont->act(*this);
+            actionsLog.push_back(cont);
         }
         else if(command == "watch") {
             BaseAction *watch = new Watch();

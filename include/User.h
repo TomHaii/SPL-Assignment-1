@@ -55,12 +55,10 @@ public:
     void addToHistory(Watchable*);
     GenreRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
-    void increaseTag(std::string &tag);
-    std::string getNextPopular(std::string);
+    std::string getNextPopular(std::vector<std::string>&);
 private:
+    std::unordered_map<std::string,long> tagsMap;
     std::pair<std::string, long> mostPopularTag;
-    std::vector<std::pair<std::string, long>> popularTags;
-
 };
 
 #endif

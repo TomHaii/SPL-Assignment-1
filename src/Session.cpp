@@ -117,19 +117,22 @@ void Session::start() {
             watch->act(*this);
             actionsLog.push_back(watch);
             std::string ans="";
-            while (ans != "n"){
+            while (ans != "n") {
                 long historySize = activeUser->get_history().size();
-                Watchable* next = activeUser->get_history().at(historySize-1)->getNextWatchable(*this);
-                std::cout<<"We recommend watching " + next->toStringHistory()+", continue watching? [y/n]"<<std::endl;
-                getline(std::cin, ans);
-                if (ans != "y" && ans != "n"){
-                    std::cout<<"please choose y or n"<<std::endl;
-                }
-                else if (ans == "y") {
-                    second = std::to_string(next->getId());
-                    BaseAction* watch2 = new Watch();
-                    watch2->act(*this);
-                    actionsLog.push_back(watch2);
+                Watchable *next = activeUser->get_history().at(historySize - 1)->getNextWatchable(*this);
+                if (next == nullptr) {
+                    std::cout << "No next recommendations" << std::endl;
+                } else {
+                    std::cout << "We recommend watching " + next->toStringHistory() + ", continue watching? [y/n] ";
+                    getline(std::cin, ans);
+                    if (ans != "y" && ans != "n") {
+                        std::cout << "please choose y or n" << std::endl;
+                    } else if (ans == "y") {
+                        second = std::to_string(next->getId());
+                        BaseAction *watch2 = new Watch();
+                        watch2->act(*this);
+                        actionsLog.push_back(watch2);
+                    }
                 }
             }
         }

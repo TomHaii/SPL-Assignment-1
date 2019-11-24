@@ -24,7 +24,7 @@ std::vector<Watchable*> User::get_history() const{
 }
 
 void User::set_history(std::vector<Watchable*> _history) {
-    history = _history;
+    history = std::move(_history);
 }
 
 
@@ -74,80 +74,60 @@ GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name)
     mostPopularTag.second=-1;
 }
 
-Watchable* GenreRecommenderUser::getRecommendation(Session& s){
+Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
+    std::vector<std::string> prevTags;
     std::string wantedTag = mostPopularTag.first;
-    std::string str;
-    while (wantedTag != str) {
+    Watchable *next = nullptr;
+    long i = 1;
+    while (!wantedTag.empty()) {
+        i++;
         for (Watchable *w : s.getContent()) {
             std::vector<std::string> tags = w->getTags();
-            if (std::find(tags.begin(), tags.end(), wantedTag) != tags.end()) {
-                if (!(std::find(history.begin(), history.end(), w) != history.end())) {
-                    return  &*w;
-                }
-            }
-        }
-        str = getNextPopular(wantedTag);
-    }
-    return nullptr;
-}
-
-
-void GenreRecommenderUser::increaseTag(std::string &tag) {
-    bool found = false;
-    if(!popularTags.empty()) {
-        for (std::pair<std::string, long> &p: popularTags) {
-            if (p.first == tag) {
-                p.second += 1;
-                found = true;
+            if ((std::find(tags.begin(), tags.end(), wantedTag) != tags.end() &&
+                 (!(std::find(history.begin(), history.end(), *&w) != history.end())))) {
+                std::cout << "hi" << std::endl;
+                next = w;
+                break;
             }
         }
     }
-    if(!found){
-        std::pair<std::string, long> p (tag,1);
-        popularTags.push_back(p);
+    if (next == nullptr) {
+        prevTags.push_back(wantedTag);
+        wantedTag = getNextPopular(prevTags);
+        std::cout << wantedTag << std::endl;
     }
-    if (tag == mostPopularTag.first) {
-        mostPopularTag.second += 1;
-    }
+    return next;
 }
-
 
 void GenreRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
-    std::pair<std::string, long> returned;
     for (std::string tag : w->getTags()) {
-        increaseTag(tag);
-    }
-    std::string tag = mostPopularTag.first;
-    long num = mostPopularTag.second;
-    for (std::pair<std::string, long> &p : popularTags) {
-        if ((p.second > num) || (p.second == num && p.first.compare(tag)<0)){
-            num = p.second;
-            tag = p.first;
+        tagsMap[tag]++;
+        if (tagsMap.count(tag) == 0){
+            tagsMap[tag] = 1;
+        }
+        if ((tagsMap[tag] > mostPopularTag.second) || (tagsMap[tag] == mostPopularTag.second && tag.compare(mostPopularTag.first)<0)) {
+            mostPopularTag.first = tag;
+            mostPopularTag.second = tagsMap[tag];
         }
     }
-    mostPopularTag.first = tag;
-    mostPopularTag.second = num;
 }
 
-std::string GenreRecommenderUser::getNextPopular(std::string curr) {
-    std::string next = curr;
-    long currNum=0;
-    for (std::pair<std::string, long>& p : popularTags){
-        if (p.first == curr){
-            currNum = p.second;
+std::string GenreRecommenderUser::getNextPopular(std::vector<std::string>& prevTags) {
+    long bestTagNum=0;
+    std::string bestNextTag;
+    long currNum;
+    std::string currTag;
+    for (std::pair<std::string, long> p : tagsMap){
+        currTag = p.first;
+        currNum = p.second;
+        if ((!(std::find(prevTags.begin(), prevTags.end(), currTag) != prevTags.end()))&&
+            ((currNum > bestTagNum) || (currNum == bestTagNum && currTag.compare(bestNextTag) < 0))){
+            bestNextTag = currTag;
+            bestTagNum = currNum;
         }
     }
-    for (std::pair<std::string, long>& p : popularTags){
-        if (p.first != curr && p.second == currNum && p.first.compare(next)<0){
-            next = p.first;
-        }
-        else if (p.first != curr && p.second > currNum){
-            next = p.first;
-            currNum = p.second;
-        }
-    }
-    return next;
+    return bestNextTag;
 }
 
 

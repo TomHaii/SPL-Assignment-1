@@ -20,10 +20,12 @@ public:
     void add_to_user_map(User* user, std::string name);
     void change_user(User* user);
     void erase_user(std::string name);
+    std::vector<BaseAction*>& getActionsLog();
     std::string secondInput() const;
     std::string thirdInput() const;
-    std::vector<BaseAction*>& getActionsLog();
     void clear();
+
+
 private:
     std::vector<std::string> possibleActions;
     std::string command;

@@ -55,13 +55,7 @@ void CreateUser::act(Session& sess){
 }
 
 std::string CreateUser::toString() const {
-    if (getStatus() == COMPLETED){
-        return "CreateUser COMPLETED";
-    }
-    else if (getStatus() == ERROR){
-        return ("CreateUser ERROR: " + getErrorMsg());
-    }
-    return "";
+    return "CreateUser";
 }
 
 void ChangeActiveUser::act(Session &sess) {
@@ -77,14 +71,9 @@ void ChangeActiveUser::act(Session &sess) {
 
 
 std::string ChangeActiveUser::toString() const {
-    if (getStatus() == COMPLETED){
-        return "ChangeUser COMPLETED";
-    }
-    else if (getStatus() == ERROR){
-        return ("ChangeUser ERROR: " + getErrorMsg());
-    }
-    return "";
+    return "ChangeUser";
 }
+
 
 void DeleteUser::act(Session &sess) {
     std::string user_name = sess.secondInput();
@@ -99,13 +88,7 @@ void DeleteUser::act(Session &sess) {
 }
 
 std::string DeleteUser::toString() const {
-    if (getStatus() == COMPLETED){
-        return "DeleteUser COMPLETED";
-    }
-    else if (getStatus() == ERROR){
-        return ("DeleteUser ERROR: " + getErrorMsg());
-    }
-    return "";
+    return "DeleteUser";
 }
 
 void DuplicateUser::act(Session &sess) {
@@ -135,10 +118,7 @@ void DuplicateUser::act(Session &sess) {
 }
 
 std::string DuplicateUser::toString() const {
-    if (getStatus() == COMPLETED){
-        return "DuplicateUser COMPLETED";
-    }
-    return ("DuplicateUser ERROR: " + getErrorMsg());
+    return "DuplicateUser";
 }
 
 void PrintContentList::act(Session &sess){
@@ -149,7 +129,7 @@ void PrintContentList::act(Session &sess){
 }
 
 std::string PrintContentList::toString() const {
-    return "PrintContentList COMPLETED";
+    return "PrintContentList";
 }
 
 void PrintWatchHistory::act(Session &sess){
@@ -164,7 +144,7 @@ void PrintWatchHistory::act(Session &sess){
 }
 
 std::string PrintWatchHistory::toString() const {
-    return "PrintWatchHistory COMPLETED";
+    return "PrintWatchHistory";
 }
 
 void Watch::act(Session &sess) {
@@ -181,30 +161,34 @@ void Watch::act(Session &sess) {
 }
 
 std::string Watch::toString() const {
-    if (getStatus() == ERROR){
-        return +"Watch ERROR: " +getErrorMsg();
-    }
-    return "Watch COMPLETED";
+    return "Watch";
 }
 
 void PrintActionsLog::act(Session &sess) {
     std::vector<BaseAction*>& log = sess.getActionsLog();
-    for (BaseAction* action : log){
-            std::cout<<action->toString()<<std::endl;
+    for (long i = log.size()-1; i> 0; i--){
+        BaseAction* action = log.at(i);
+        if (action->getStatus() == COMPLETED){
+            std::cout <<action->toString() +" COMPLETED" << std::endl;
+        }
+        else{
+            std::cout << action->toString() + " ERROR: " + getErrorMsg() <<std::endl;
+        }
     }
 }
 
 std::string PrintActionsLog::toString() const {
-     return "PrintActionsLog COMPLETED";
+     return "PrintActionsLog";
 }
 
 void Exit::act(Session& sess) {
-    std::cout <<"LEAVING SPLFLIX\nSee you next time!";
+    std::cout <<"LEAVING SPLFLIX"<<std::endl;
+    std::cout <<"See you next time!"<<std::endl;
     complete();
 }
 
 std::string Exit::toString() const {
-    return "Exit COMPLETED";
+    return "Exit";
 }
 
 

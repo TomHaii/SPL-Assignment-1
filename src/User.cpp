@@ -92,6 +92,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
         wantedTag = getNextPopular(prevTags);
     }
     return next;
+    //hi
 }
 
 void GenreRecommenderUser::addToHistory(Watchable* w) {

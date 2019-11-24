@@ -30,13 +30,17 @@ void BaseAction::complete() {
 }
 
 std::string BaseAction::getErrorMsg() const {
+    std::cout<<errorMsg<<std::endl;
     return errorMsg;
 }
 
 void CreateUser::act(Session& sess){
     std::string user_name = sess.secondInput();
     std::string algorithm = sess.thirdInput();
-    if (sess.getUserMap().count(user_name) > 0) { //username taken
+    if (user_name.empty() || algorithm.empty()){
+        error("invalid input");
+    }
+    else if (sess.getUserMap().count(user_name) > 0) { //username taken
         error("the user name inserted is already taken");
     } else if (algorithm != "len" & algorithm != "rer" & algorithm != "gen") { //not an algorithm
         error("invalid algorithm");
@@ -60,12 +64,17 @@ std::string CreateUser::toString() const {
 
 void ChangeActiveUser::act(Session &sess) {
     std::string user_name = sess.secondInput();
-    std::unordered_map<std::string, User *> map = sess.getUserMap();
-    if (map.count(user_name) == 0) {
-        error("no such user");
-    } else {
-        sess.change_user(sess.getUserMap()[user_name]);
-        complete();
+    if (user_name.empty()){
+        error("invalid input");
+    }
+    else {
+        std::unordered_map<std::string, User *> map = sess.getUserMap();
+        if (map.count(user_name) == 0) {
+            error("no such user");
+        } else {
+            sess.change_user(sess.getUserMap()[user_name]);
+            complete();
+        }
     }
 }
 
@@ -77,14 +86,19 @@ std::string ChangeActiveUser::toString() const {
 
 void DeleteUser::act(Session &sess) {
     std::string user_name = sess.secondInput();
-    std::unordered_map<std::string, User *> map = sess.getUserMap();
-    if (map.count(user_name) == 0) {
-        error("no such user");
-    } else if (sess.get_active_user().getName() == user_name) {
-        sess.change_user(map["DEFAULT"]);
+    if (user_name.empty()){
+        error("invalid input");
     }
+    else {
+        std::unordered_map<std::string, User *> map = sess.getUserMap();
+        if (map.count(user_name) == 0) {
+            error("no such user");
+        } else if (sess.get_active_user().getName() == user_name) {
+            sess.change_user(map["DEFAULT"]);
+        }
         sess.erase_user(user_name);
         complete();
+    }
 }
 
 std::string DeleteUser::toString() const {
@@ -94,6 +108,9 @@ std::string DeleteUser::toString() const {
 void DuplicateUser::act(Session &sess) {
     std::string orig_user = sess.secondInput();
     std::string new_user = sess.thirdInput();
+    if (orig_user.empty() || new_user.empty()){
+        error("invalid input");
+    }
     std::unordered_map<std::string, User *> map = sess.getUserMap();
     if (map.count(orig_user) == 0) {
         error("no such user");
@@ -148,17 +165,30 @@ std::string PrintWatchHistory::toString() const {
 }
 
 void Watch::act(Session &sess) {
-    std::string _id = sess.secondInput();;
-    long id = std::stol(_id);
-    if (id > sess.getContent().size()) {
-        error("invalid id inserted");
-    } else {
-        Watchable* w = sess.getContent().at(id - 1);
-        std::cout << "Watching " + w->toStringHistory()<<std::endl;
-        sess.get_active_user().addToHistory(w);
-        complete();
+    std::string _id = sess.secondInput();
+    bool isNumber = false;
+    long id = -1;
+    std::string::const_iterator it = _id.begin();
+    while (it != _id.end() && std::isdigit(*it)) {
+        it++;
+    }
+    isNumber = !_id.empty() && it == _id.end();
+    if (_id.empty() || !isNumber) {
+        error("invalid input");
+    }
+    else {
+        id = std::stol(_id);
+        if (id > sess.getContent().size()) {
+            error("invalid id inserted");
+        } else {
+            Watchable *w = sess.getContent().at(id - 1);
+            std::cout << "Watching " + w->toStringHistory() << std::endl;
+            sess.get_active_user().addToHistory(w);
+            complete();
+        }
     }
 }
+
 
 std::string Watch::toString() const {
     return "Watch";
@@ -172,8 +202,10 @@ void PrintActionsLog::act(Session &sess) {
             std::cout <<action->toString() +" COMPLETED" << std::endl;
         }
         else{
-            std::cout << action->toString() + " ERROR: " + getErrorMsg() <<std::endl;
+            std::cout << action->toString() + " ERROR: ";
+            std::cout << getErrorMsg() <<std::endl;
         }
+
     }
 }
 
@@ -190,7 +222,5 @@ void Exit::act(Session& sess) {
 std::string Exit::toString() const {
     return "Exit";
 }
-
-
 
 

@@ -77,6 +77,9 @@ std::unordered_map<std::string,User*> Session::getUserMap() const{
 void Session::start() {
     std::cout<<"SPLFLIX is now on!"<<std::endl;
     while (command != "exit") {
+        command = "";
+        second = "";
+        third = "";
         std::cout << "what would you like to do? ";
         std::string inputLine;
         getline(std::cin, inputLine);
@@ -112,27 +115,30 @@ void Session::start() {
             content->act(*this);
             actionsLog.push_back(content);
         }
-        else if(command == "watch"){
-            BaseAction* watch = new Watch();
+        else if(command == "watch") {
+            BaseAction *watch = new Watch();
             watch->act(*this);
-            actionsLog.push_back(watch);
-            std::string ans="";
-            while (ans != "n") {
-                long historySize = activeUser->get_history().size();
-                Watchable *next = activeUser->get_history().at(historySize - 1)->getNextWatchable(*this);
-                if (next == nullptr) {
-                    ans = "n'";
-                    std::cout << "No next recommendations" << std::endl;
-                } else {
-                    std::cout << "We recommend watching " + next->toStringHistory() + ", continue watching? [y/n] ";
-                    getline(std::cin, ans);
-                    if (ans != "y" && ans != "n") {
-                        std::cout << "please choose y or n" << std::endl;
-                    } else if (ans == "y") {
-                        second = std::to_string(next->getId());
-                        BaseAction *watch2 = new Watch();
-                        watch2->act(*this);
-                        actionsLog.push_back(watch2);
+            if (watch->getStatus() != ERROR) {
+                actionsLog.push_back(watch);
+                std::string ans;
+                while (ans != "n") {
+                    long historySize = activeUser->get_history().size();
+                    Watchable *next = activeUser->get_history().at(historySize - 1)->getNextWatchable(*this);
+                    if (next == nullptr) {
+                        ans = "n'";
+                        std::cout << "No next recommendations" << std::endl;
+
+                    } else {
+                        std::cout << "We recommend watching " + next->toStringHistory() + ", continue watching? [y/n] ";
+                        getline(std::cin, ans);
+                        if (ans != "y" && ans != "n") {
+                            std::cout << "please choose y or n" << std::endl;
+                        } else if (ans == "y") {
+                            second = std::to_string(next->getId());
+                            BaseAction *watch2 = new Watch();
+                            watch2->act(*this);
+                            actionsLog.push_back(watch2);
+                        }
                     }
                 }
             }
@@ -147,10 +153,13 @@ void Session::start() {
             log->act(*this);
             actionsLog.push_back(log);
         }
+
     }
-    command = "";
     BaseAction* exit = new Exit();
     exit->act(*this);
+    command = "";
+    second = "";
+    third = "";
 }
 
 void Session::add_to_user_map(User* user, std::string name){

@@ -16,8 +16,8 @@ public:
     virtual Watchable* getRecommendation(Session& s) = 0;
     std::string getName() const;
     std::string getRecommendedAlgorithm() const;
-  //  virtual ~User();
- //   void User::clear();
+//    virtual ~User();
+//    void User::clear();
     std::vector<Watchable*> get_history() const;
     void set_history(std::vector<Watchable*> _history);
     virtual void addToHistory(Watchable*) = 0;

@@ -85,16 +85,11 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
             std::vector<std::string> tags = w->getTags();
             if ((std::find(tags.begin(), tags.end(), wantedTag) != tags.end() &&
                  (!(std::find(history.begin(), history.end(), *&w) != history.end())))) {
-                std::cout << "hi" << std::endl;
-                next = w;
-                break;
+                return w;
             }
         }
-    }
-    if (next == nullptr) {
         prevTags.push_back(wantedTag);
         wantedTag = getNextPopular(prevTags);
-        std::cout << wantedTag << std::endl;
     }
     return next;
 }

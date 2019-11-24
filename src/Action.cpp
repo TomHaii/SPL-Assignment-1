@@ -9,8 +9,8 @@
 #include <unordered_map>
 
 
-
 BaseAction::BaseAction(){
+    errorMsg = "";
     status = PENDING;
 }
 
@@ -22,7 +22,7 @@ ActionStatus BaseAction::getStatus() const{
 void BaseAction::error(const std::string &_errorMsg) {
     status = ERROR;
     errorMsg = _errorMsg;
-    std::cout<<errorMsg<<std::endl;
+    std::cout << errorMsg << std::endl;
 }
 
 void BaseAction::complete() {
@@ -202,8 +202,7 @@ void PrintActionsLog::act(Session &sess) {
             std::cout <<action->toString() +" COMPLETED" << std::endl;
         }
         else{
-            std::cout << action->toString() + " ERROR: ";
-            std::cout << getErrorMsg() <<std::endl;
+            std::cout << action->toString() + " ERROR: " + getErrorMsg() << std::endl;
         }
 
     }

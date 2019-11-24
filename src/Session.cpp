@@ -118,8 +118,8 @@ void Session::start() {
         else if(command == "watch") {
             BaseAction *watch = new Watch();
             watch->act(*this);
+            actionsLog.push_back(watch);
             if (watch->getStatus() != ERROR) {
-                actionsLog.push_back(watch);
                 std::string ans;
                 while (ans != "n") {
                     long historySize = activeUser->get_history().size();

@@ -121,6 +121,7 @@ void Session::start() {
                 long historySize = activeUser->get_history().size();
                 Watchable *next = activeUser->get_history().at(historySize - 1)->getNextWatchable(*this);
                 if (next == nullptr) {
+                    ans = "n'";
                     std::cout << "No next recommendations" << std::endl;
                 } else {
                     std::cout << "We recommend watching " + next->toStringHistory() + ", continue watching? [y/n] ";

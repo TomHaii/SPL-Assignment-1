@@ -2,10 +2,11 @@
 #include "../include/User.h"
 #include "../include/Session.h"
 #include <algorithm>
+#include <utility>
 #include <vector>
 
 
-User::User(const std::string& _name):name(_name), recommendedAlgorithm("len"){}
+User::User(std::string  _name):name(std::move(_name)), recommendedAlgorithm("len"){}
 
 std::string User::getName() const {
     return name;
@@ -30,13 +31,14 @@ void User::set_history(std::vector<Watchable*> _history) {
 
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
     setRecommendedAlgorithm("len");
+    average = 0;
 }
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
     Watchable* returnedShow = nullptr;
-    int bestDifference = std::numeric_limits<int>::max();
-    for(Watchable* cont: s.getContent()){
-        int difference = abs(average - cont->getLength());
+    long bestDifference = std::numeric_limits<long>::max();
+    for(Watchable*& cont: s.getContent()){
+        long difference = std::abs(average - cont->getLength());
         if((!(std::find(history.begin(), history.end(), cont) != history.end())) && difference < bestDifference) {
             bestDifference = difference;
             returnedShow = cont;
@@ -46,9 +48,9 @@ Watchable* LengthRecommenderUser::getRecommendation(Session& s){
 }
 
 void LengthRecommenderUser::addToHistory(Watchable* w) {
-    long sum = average*history.size();
+    long sum = average*(long)history.size();
     sum += w->getLength();
-    average = sum/(history.size()+1);
+    average = sum/(long)(history.size()+1);
     history.push_back(w);
 }
 

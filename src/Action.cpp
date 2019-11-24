@@ -7,6 +7,7 @@
 #include "../include/Watchable.h"
 #include "../include/Session.h"
 #include "../include/Action.h"
+#include <sstream>
 
 #include <unordered_map>
 
@@ -23,7 +24,7 @@ ActionStatus BaseAction::getStatus() const{
 
 void BaseAction::error(const std::string &_errorMsg) {
     status = ERROR;
-    errorMsg.assign(_errorMsg);
+    errorMsg = _errorMsg;
     std::cout << errorMsg << std::endl;
 }
 
@@ -32,13 +33,9 @@ void BaseAction::complete() {
 }
 
 std::string BaseAction::getErrorMsg() const {
-    std::cout<<errorMsg<<std::endl;
-    return errorMsg;
+    return " "+ errorMsg;
 }
 
-std::string BaseAction::getError() const {
-    return errorMsg;
-}
 
 void CreateUser::act(Session& sess){
     std::string user_name = sess.secondInput();
@@ -65,7 +62,7 @@ void CreateUser::act(Session& sess){
 }
 
 std::string CreateUser::toString() const {
-    return "CreateUser";
+    return "CreateUser" + getErrorMsg();
 }
 
 void ChangeActiveUser::act(Session &sess) {
@@ -86,7 +83,7 @@ void ChangeActiveUser::act(Session &sess) {
 
 
 std::string ChangeActiveUser::toString() const {
-    return "ChangeUser";
+    return "ChangeUser" + getErrorMsg();
 }
 
 
@@ -108,7 +105,7 @@ void DeleteUser::act(Session &sess) {
 }
 
 std::string DeleteUser::toString() const {
-    return "DeleteUser";
+    return "DeleteUser" + getErrorMsg();
 }
 
 void DuplicateUser::act(Session &sess) {
@@ -141,7 +138,7 @@ void DuplicateUser::act(Session &sess) {
 }
 
 std::string DuplicateUser::toString() const {
-    return "DuplicateUser";
+    return "DuplicateUser" + getErrorMsg();
 }
 
 void PrintContentList::act(Session &sess){
@@ -167,7 +164,7 @@ void PrintWatchHistory::act(Session &sess){
 }
 
 std::string PrintWatchHistory::toString() const {
-    return "PrintWatchHistory";
+    return "PrintWatchHistory" + getErrorMsg();
 }
 
 void Watch::act(Session &sess) {
@@ -197,25 +194,31 @@ void Watch::act(Session &sess) {
 
 
 std::string Watch::toString() const {
-    return "Watch";
+    return "Watch" + getErrorMsg();
 }
 
 void PrintActionsLog::act(Session &sess) {
     std::vector<BaseAction*>& log = sess.getActionsLog();
     for (long i = (long) log.size()-1; i >= 0; i--){
         BaseAction* action = log.at(i);
+        std::istringstream iss(action->toString());
+        std::string act;
+        std::getline(iss, act, ' ');
         if (action->getStatus() == COMPLETED){
-            std::cout <<action->toString() +" COMPLETED" << std::endl;
+            std::cout << act +" COMPLETED" << std::endl;
         }
         else{
-            std::cout << action->toString() + " ERROR: " + action->getError() << std::endl;
+            std::string error;
+            std::getline(iss, error);
+            act.append(" ERROR: " + error);
+            std::cout << act << std::endl;
         }
 
     }
 }
 
 std::string PrintActionsLog::toString() const {
-     return "PrintActionsLog";
+     return "PrintActionsLog" + getErrorMsg();
 }
 
 void Exit::act(Session& sess) {

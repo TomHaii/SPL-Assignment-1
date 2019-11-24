@@ -15,7 +15,6 @@ class BaseAction{
 public:
     BaseAction();
     ActionStatus getStatus() const;
-    std::string getError() const;
     virtual void act(Session& sess)=0;
     virtual std::string toString() const=0;
 protected:

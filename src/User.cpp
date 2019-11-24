@@ -17,7 +17,7 @@ std::string User::getRecommendedAlgorithm() const {
 }
 
 void User::setRecommendedAlgorithm(std::string s)  {
-    recommendedAlgorithm = s;
+    recommendedAlgorithm = std::move(s);
 }
 
 std::vector<Watchable*> User::get_history() const{
@@ -110,6 +110,8 @@ void GenreRecommenderUser::addToHistory(Watchable* w) {
         }
     }
 }
+
+
 
 std::string GenreRecommenderUser::getNextPopular(std::vector<std::string>& prevTags) {
     long bestTagNum=0;

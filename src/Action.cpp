@@ -166,7 +166,7 @@ std::string Watch::toString() const {
 
 void PrintActionsLog::act(Session &sess) {
     std::vector<BaseAction*>& log = sess.getActionsLog();
-    for (long i = log.size()-1; i> 0; i--){
+    for (long i = (long) log.size()-1; i >= 0; i--){
         BaseAction* action = log.at(i);
         if (action->getStatus() == COMPLETED){
             std::cout <<action->toString() +" COMPLETED" << std::endl;

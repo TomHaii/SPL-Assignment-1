@@ -148,6 +148,7 @@ void Session::start() {
             actionsLog.push_back(log);
         }
     }
+    command = "";
     BaseAction* exit = new Exit();
     exit->act(*this);
 }

@@ -32,8 +32,15 @@ void BaseAction::complete() {
     status = COMPLETED;
 }
 
-std::string BaseAction::getErrorMsg() const {
-    return " "+ errorMsg;
+std::string BaseAction:: getErrorMsg() const {
+    return errorMsg;
+}
+
+std::string BaseAction::toStringHelper(std::string s) const{
+    if (status == ERROR){
+        return s + " ERROR: " + errorMsg;
+    }
+    return s + " COMPLETED";
 }
 
 
@@ -62,7 +69,7 @@ void CreateUser::act(Session& sess){
 }
 
 std::string CreateUser::toString() const {
-    return "CreateUser" + getErrorMsg();
+    return toStringHelper("CreateUser");
 }
 
 void ChangeActiveUser::act(Session &sess) {
@@ -83,7 +90,7 @@ void ChangeActiveUser::act(Session &sess) {
 
 
 std::string ChangeActiveUser::toString() const {
-    return "ChangeUser" + getErrorMsg();
+    return toStringHelper("ChangeUser");
 }
 
 
@@ -105,7 +112,7 @@ void DeleteUser::act(Session &sess) {
 }
 
 std::string DeleteUser::toString() const {
-    return "DeleteUser" + getErrorMsg();
+    return toStringHelper("DeleteUser");
 }
 
 void DuplicateUser::act(Session &sess) {
@@ -138,7 +145,7 @@ void DuplicateUser::act(Session &sess) {
 }
 
 std::string DuplicateUser::toString() const {
-    return "DuplicateUser" + getErrorMsg();
+    return toStringHelper("DuplicateUser");
 }
 
 void PrintContentList::act(Session &sess){
@@ -149,7 +156,7 @@ void PrintContentList::act(Session &sess){
 }
 
 std::string PrintContentList::toString() const {
-    return "PrintContentList";
+    return "PrintContentList COMPLETED";
 }
 
 void PrintWatchHistory::act(Session &sess){
@@ -164,23 +171,21 @@ void PrintWatchHistory::act(Session &sess){
 }
 
 std::string PrintWatchHistory::toString() const {
-    return "PrintWatchHistory" + getErrorMsg();
+    return toStringHelper("PrintWatchHistory");
 }
 
 void Watch::act(Session &sess) {
     std::string _id = sess.secondInput();
-    bool isNumber = false;
-    long id = -1;
     std::string::const_iterator it = _id.begin();
     while (it != _id.end() && std::isdigit(*it)) {
         it++;
     }
-    isNumber = !_id.empty() && it == _id.end();
+    bool isNumber = !_id.empty() && it == _id.end();
     if (_id.empty() || !isNumber) {
         error("invalid input");
     }
     else {
-        id = std::stol(_id);
+        long id = std::stol(_id);
         if (id > sess.getContent().size()) {
             error("invalid id inserted");
         } else {
@@ -194,31 +199,19 @@ void Watch::act(Session &sess) {
 
 
 std::string Watch::toString() const {
-    return "Watch" + getErrorMsg();
+    return toStringHelper("Watch");
 }
 
 void PrintActionsLog::act(Session &sess) {
     std::vector<BaseAction*>& log = sess.getActionsLog();
     for (long i = (long) log.size()-1; i >= 0; i--){
         BaseAction* action = log.at(i);
-        std::istringstream iss(action->toString());
-        std::string act;
-        std::getline(iss, act, ' ');
-        if (action->getStatus() == COMPLETED){
-            std::cout << act +" COMPLETED" << std::endl;
-        }
-        else{
-            std::string error;
-            std::getline(iss, error);
-            act.append(" ERROR: " + error);
-            std::cout << act << std::endl;
-        }
-
+        std::cout << action->toString() << std::endl;
     }
 }
 
 std::string PrintActionsLog::toString() const {
-     return "PrintActionsLog" + getErrorMsg();
+     return "PrintActionsLog COMPLETED";
 }
 
 void Exit::act(Session& sess) {
@@ -228,7 +221,7 @@ void Exit::act(Session& sess) {
 }
 
 std::string Exit::toString() const {
-    return "Exit";
+    return "Exit COMPLETED";
 }
 
 

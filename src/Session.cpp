@@ -129,7 +129,7 @@ void Session::start() {
                         std::cout << "No next recommendations" << std::endl;
 
                     } else {
-                        std::cout << "We recommend watching " + next->toStringHistory() + ", continue watching? [y/n] ";
+                        std::cout << "We recommend watching " + next->toStringHistory() + ", continue watching? [y/n]";
                         getline(std::cin, ans);
                         if (ans != "y" && ans != "n") {
                             std::cout << "please choose y or n" << std::endl;
@@ -162,7 +162,7 @@ void Session::start() {
     third = "";
 }
 
-void Session::add_to_user_map(User* user, std::string name){
+void Session::add_to_user_map(User* user, std::string &name){
     userMap[name] = user;
 }
 
@@ -181,13 +181,13 @@ Session::~Session() {
 }
 
 void Session::clear(){
-    for(auto cont:content){
+    for(auto &cont:content){
         delete(cont);
     }
-    for(auto action: actionsLog){
+    for(auto &action: actionsLog){
         delete(action);
     }
-    for(auto user: userMap){
-        delete(user.second);
+    for(auto &us: userMap){
+        delete(us.second);
     }
 };

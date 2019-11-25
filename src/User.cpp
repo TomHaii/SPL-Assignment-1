@@ -6,7 +6,9 @@
 #include <vector>
 
 
-User::User(std::string  _name):name(std::move(_name)), recommendedAlgorithm("len"){}
+User::User(const std::string  &_name):name(_name){
+    recommendedAlgorithm = "len";
+}
 
 std::string User::getName() const {
     return name;

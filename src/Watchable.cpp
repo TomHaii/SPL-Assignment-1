@@ -11,9 +11,7 @@ Watchable::Watchable(long _id, int _length, const std::vector<std::string> &_tag
 
 }
 
-Watchable::~Watchable() {
-
-}
+Watchable::~Watchable() = default;
 
 Movie::Movie(long _id, const std::string& _name, int _length, const std::vector<std::string>& _tags):
         Watchable(_id, _length, _tags), name(_name)
@@ -50,7 +48,7 @@ long Watchable::getId() const {
 
 std::string Movie::toString() const {
     std::string output = std::to_string(getId()) +". " + name + " " + std::to_string(getLength())+ " minutes [";
-    for (std::string s : getTags()){
+    for (std::string &s : getTags()){
         output += s + ", ";
     }
     output = output.substr(0, output.length()-2);

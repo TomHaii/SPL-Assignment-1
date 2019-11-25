@@ -17,7 +17,7 @@ public:
     void start();
     User& get_active_user();
     std::unordered_map<std::string,User*> getUserMap() const;
-    void add_to_user_map(User* user, std::string name);
+    void add_to_user_map(User* user, std::string &name);
     void change_user(User* user);
     void erase_user(std::string name);
     std::vector<BaseAction*>& getActionsLog();

@@ -36,7 +36,7 @@ std::string BaseAction:: getErrorMsg() const {
     return errorMsg;
 }
 
-std::string BaseAction::toStringHelper(std::string s) const{
+std::string BaseAction::toStringHelper(const std::string &s) const{
     if (status == ERROR){
         return s + " ERROR: " + errorMsg;
     }
@@ -78,8 +78,7 @@ void ChangeActiveUser::act(Session &sess) {
         error("invalid input");
     }
     else {
-        std::unordered_map<std::string, User *> map = sess.getUserMap();
-        if (map.count(user_name) == 0) {
+        if (sess.getUserMap().count(user_name) == 0) {
             error("no such user");
         } else {
             sess.change_user(sess.getUserMap()[user_name]);

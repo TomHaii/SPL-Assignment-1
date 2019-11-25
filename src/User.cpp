@@ -30,6 +30,16 @@ void User::set_history(std::vector<Watchable*> _history) {
     history = std::move(_history);
 }
 
+//void User::clean(const std::vector<Watchable *> &_history) {
+//    for(Watchable* w: _history){
+//        delete(w);
+//    }
+//}
+//
+//User::~User(){
+//
+//}
+
 
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
     setRecommendedAlgorithm("len");

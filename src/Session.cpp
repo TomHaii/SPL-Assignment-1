@@ -181,13 +181,39 @@ Session::~Session() {
 }
 
 void Session::clear(){
-    for(auto &cont:content){
+    for(Watchable* cont:content){
         delete(cont);
     }
-    for(auto &action: actionsLog){
+    for(BaseAction* action: actionsLog){
         delete(action);
     }
-    for(auto &us: userMap){
+    for(std::pair<std::string, User*> us: userMap){
         delete(us.second);
+    }
+}
+
+Session::Session(const Session &other) {
+    activeUser = other.activeUser;
+    fillDataStructures(other.content, other.actionsLog, other.userMap);
+}
+
+Session &Session::operator=(const Session &other) {
+    if(this != &other){
+        activeUser = other.activeUser;
+        fillDataStructures(other.content, other.actionsLog, other.userMap);
+    }
+    return(*this);
+}
+
+void Session::fillDataStructures(const std::vector<Watchable *> &_content, const std::vector<BaseAction *> &_actionLog,
+                                 const std::unordered_map<std::string, User *> &_userMap) {
+    for(Watchable* cont: _content){
+        content.push_back(cont);
+    }
+    for(BaseAction* action: _actionLog){
+        actionsLog.push_back(action);
+    }
+    for(std::pair<std::string, User*> p: _userMap){
+        userMap[p.first] = p.second;
     }
 };

@@ -96,3 +96,4 @@ void Episode::setNextEpisode(long _id) {
 int Watchable::getLength() const{
     return length;
 }
+

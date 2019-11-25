@@ -12,7 +12,12 @@ public:
     Watchable(long id, int length, const std::vector<std::string>& tags);
     std::vector<std::string> getTags() const;
     long getId() const;
+    //destructor
     virtual ~Watchable();
+    //copy constructor
+    //copy assignment operator
+    //move constructor
+    //move assignment operator
     virtual int getLength() const;
     virtual std::string toString() const = 0;
     virtual std::string toStringHistory() const = 0;

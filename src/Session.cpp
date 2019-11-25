@@ -125,7 +125,7 @@ void Session::start() {
                     long historySize = activeUser->get_history().size();
                     Watchable *next = activeUser->get_history().at(historySize - 1)->getNextWatchable(*this);
                     if (next == nullptr) {
-                        ans = "n'";
+                        ans = "n";
                         std::cout << "No next recommendations" << std::endl;
 
                     } else {
@@ -182,13 +182,13 @@ Session::~Session() {
 
 void Session::clear(){
     for(Watchable* cont:content){
-        delete(cont);
+        delete cont;
     }
     for(BaseAction* action: actionsLog){
-        delete(action);
+        delete action;
     }
     for(std::pair<std::string, User*> us: userMap){
-        delete(us.second);
+        delete us.second;
     }
 }
 

@@ -95,7 +95,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
     long i = 1;
     while (!wantedTag.empty()) {
         i++;
-        for (Watchable *&w : s.getContent()) {
+        for (Watchable *w : s.getContent()) {
             std::vector<std::string> tags = w->getTags();
             if ((std::find(tags.begin(), tags.end(), wantedTag) != tags.end() &&
                  (!(std::find(history.begin(), history.end(), *&w) != history.end())))) {
@@ -141,5 +141,8 @@ std::string GenreRecommenderUser::getNextPopular(std::vector<std::string>& prevT
     }
     return bestNextTag;
 }
+
+
+
 
 

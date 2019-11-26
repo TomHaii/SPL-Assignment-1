@@ -153,7 +153,6 @@ void Session::start() {
             log->act(*this);
             actionsLog.push_back(log);
         }
-
     }
     command = "";
     second = "";
@@ -178,11 +177,11 @@ std::vector<BaseAction*>& Session::getActionsLog(){
 
 Session::~Session() {
     std::cout << "I am at destructor" << std::endl;
-    delete(activeUser);
     clear();
 }
 
 void Session::clear(){
+    delete(activeUser);
     possibleActions.clear();
     for(Watchable* cont:content){
         delete cont;
@@ -196,26 +195,37 @@ void Session::clear(){
 }
 
 Session::Session(const Session &other) {
-    activeUser = other.activeUser;
     fillDataStructures(other.content, other.actionsLog, other.userMap);
+    for(std::pair<std::string, User*> user: userMap){
+        if(other.activeUser->getName() == user.first){
+            activeUser = user.second;
+        }
+    }
 }
 
 Session &Session::operator=(const Session &other) {
     if(this != &other){
-        activeUser = other.activeUser;
         clear();
         fillDataStructures(other.content, other.actionsLog, other.userMap);
+        for(std::pair<std::string, User*> user: userMap){
+            if(activeUser->getName() == user.first){
+                activeUser = user.second;
+            }
+        }
     }
     return(*this);
 }
 
+
+
 void Session::fillDataStructures(const std::vector<Watchable *> &_content, const std::vector<BaseAction *> &_actionLog,
                                  const std::unordered_map<std::string, User *> &_userMap) {
+
     for(Watchable* cont: _content){
-        content.push_back(cont);
+        content.push_back(cont->clone());
     }
     for(BaseAction* action: _actionLog){
-        actionsLog.push_back(action);
+        actionsLog.push_back(action->clone());
     }
     for(std::pair<std::string, User*> p: _userMap){
         if(p.second->getRecommendedAlgorithm() == "len")

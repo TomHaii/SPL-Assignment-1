@@ -14,6 +14,7 @@ enum ActionStatus{
 class BaseAction{
 public:
     BaseAction();
+    virtual BaseAction* clone() const = 0;
     ActionStatus getStatus() const;
     virtual void act(Session& sess)=0;
     virtual std::string toString() const=0;
@@ -29,18 +30,21 @@ private:
 
 class CreateUser  : public BaseAction {
 public:
+    virtual CreateUser* clone() const;
     virtual void act(Session&);
     virtual std::string toString() const;
 };
 
 class ChangeActiveUser : public BaseAction {
 public:
+    virtual ChangeActiveUser* clone() const;
     virtual void act(Session&);
     virtual std::string toString() const;
 };
 
 class DeleteUser : public BaseAction {
 public:
+    virtual DeleteUser* clone() const;
     virtual void act(Session &);
     virtual std::string toString() const;
 };
@@ -48,18 +52,21 @@ public:
 
 class DuplicateUser : public BaseAction {
 public:
+    virtual DuplicateUser* clone() const;
     virtual void act(Session &);
     virtual std::string toString() const;
 };
 
 class PrintContentList : public BaseAction {
 public:
+    virtual PrintContentList* clone() const;
     virtual void act (Session&);
     virtual std::string toString() const;
 };
 
 class PrintWatchHistory : public BaseAction {
 public:
+    virtual PrintWatchHistory* clone() const;
     virtual void act (Session&);
     virtual std::string toString() const;
 };
@@ -67,6 +74,7 @@ public:
 
 class Watch : public BaseAction {
 public:
+    virtual Watch* clone() const;
     virtual void act(Session&);
     virtual std::string toString() const;
 };
@@ -74,12 +82,14 @@ public:
 
 class PrintActionsLog : public BaseAction {
 public:
+    virtual PrintActionsLog* clone() const;
     virtual void act(Session&);
     virtual std::string toString() const;
 };
 
 class Exit : public BaseAction {
 public:
+    virtual Exit* clone() const;
     virtual void act(Session&);
     virtual std::string toString() const;
 };

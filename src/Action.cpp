@@ -72,6 +72,10 @@ std::string CreateUser::toString() const {
     return toStringHelper("CreateUser");
 }
 
+CreateUser *CreateUser::clone() const{
+    return new CreateUser(*this);
+}
+
 void ChangeActiveUser::act(Session &sess) {
     std::string user_name = sess.secondInput();
     if (user_name.empty()){
@@ -90,6 +94,10 @@ void ChangeActiveUser::act(Session &sess) {
 
 std::string ChangeActiveUser::toString() const {
     return toStringHelper("ChangeUser");
+}
+
+ChangeActiveUser *ChangeActiveUser::clone() const{
+    return new ChangeActiveUser(*this);
 }
 
 
@@ -112,6 +120,10 @@ void DeleteUser::act(Session &sess) {
 
 std::string DeleteUser::toString() const {
     return toStringHelper("DeleteUser");
+}
+
+DeleteUser *DeleteUser::clone() const {
+    return new DeleteUser(*this);
 }
 
 void DuplicateUser::act(Session &sess) {
@@ -147,6 +159,10 @@ std::string DuplicateUser::toString() const {
     return toStringHelper("DuplicateUser");
 }
 
+DuplicateUser *DuplicateUser::clone() const {
+    return new DuplicateUser(*this);
+}
+
 void PrintContentList::act(Session &sess){
     for(Watchable* w : sess.getContent()){
         std::cout << w->toString() <<std::endl;
@@ -156,6 +172,10 @@ void PrintContentList::act(Session &sess){
 
 std::string PrintContentList::toString() const {
     return "PrintContentList COMPLETED";
+}
+
+PrintContentList *PrintContentList::clone() const {
+    return new PrintContentList(*this);
 }
 
 void PrintWatchHistory::act(Session &sess){
@@ -171,6 +191,10 @@ void PrintWatchHistory::act(Session &sess){
 
 std::string PrintWatchHistory::toString() const {
     return toStringHelper("PrintWatchHistory");
+}
+
+PrintWatchHistory *PrintWatchHistory::clone() const {
+    return new PrintWatchHistory(*this);
 }
 
 void Watch::act(Session &sess) {
@@ -201,6 +225,10 @@ std::string Watch::toString() const {
     return toStringHelper("Watch");
 }
 
+Watch *Watch::clone() const {
+    return new Watch(*this);
+}
+
 void PrintActionsLog::act(Session &sess) {
     std::vector<BaseAction*>& log = sess.getActionsLog();
     for (long i = (long) log.size()-1; i >= 0; i--){
@@ -213,6 +241,10 @@ std::string PrintActionsLog::toString() const {
      return "PrintActionsLog COMPLETED";
 }
 
+PrintActionsLog *PrintActionsLog::clone() const {
+    return new PrintActionsLog(*this);
+}
+
 void Exit::act(Session& sess) {
     std::cout <<"LEAVING SPLFLIX"<<std::endl;
     std::cout <<"See you next time!"<<std::endl;
@@ -222,5 +254,10 @@ void Exit::act(Session& sess) {
 std::string Exit::toString() const {
     return "Exit COMPLETED";
 }
+
+Exit *Exit::clone() const {
+    return new Exit(*this);
+}
+
 
 

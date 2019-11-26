@@ -79,6 +79,8 @@ void LengthRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
 }
 
+
+
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
     setRecommendedAlgorithm("rer");
     lastRecommendation = -1;
@@ -93,6 +95,7 @@ void RerunRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
     std::cout << history.size() << std::endl;
 }
+
 
 GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name){
     setRecommendedAlgorithm("gen");
@@ -229,6 +232,7 @@ std::string GenreRecommenderUser::getPopular(const std::vector<Watchable*> &_his
          return popularTag.first;
      }
 }
+
 
 
 //std::string GenreRecommenderUser::getNextPopular(std::vector<std::string>& prevTags) {

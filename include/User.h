@@ -24,7 +24,7 @@ protected:
     void setRecommendedAlgorithm(std::string);
     std::vector<Watchable*> history;
 private:
-    const std::string name;
+    std::string name;
     std::string recommendedAlgorithm;
 
 
@@ -42,7 +42,6 @@ private:
 
 class RerunRecommenderUser : public User {
 public:
-
     RerunRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
     virtual void addToHistory(Watchable*);

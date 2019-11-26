@@ -71,6 +71,12 @@ std::string Movie::toStringHistory() const {
     return name;
 }
 
+Movie* Movie::clone() const {
+    return new Movie(*this);
+}
+Episode* Episode::clone() const {
+    return new Episode(*this);
+}
 std::string Episode::toStringHistory() const {
     std::string ep = "E"; std::string sea = "S";
     if (season < 10){

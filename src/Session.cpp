@@ -207,7 +207,7 @@ Session &Session::operator=(const Session &other) {
     if(this != &other){
         clear();
         fillDataStructures(other.content, other.actionsLog, other.userMap);
-        for(std::pair<std::string, User*> user: userMap){
+        for(std::pair<std::string, User*> user: other.userMap){
             if(activeUser->getName() == user.first){
                 activeUser = user.second;
             }
@@ -228,13 +228,7 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
         actionsLog.push_back(action->clone());
     }
     for(std::pair<std::string, User*> p: _userMap){
-        if(p.second->getRecommendedAlgorithm() == "len")
-            userMap[p.first] = new LengthRecommenderUser(p.first);
-        if(p.second->getRecommendedAlgorithm() == "rer")
-            userMap[p.first] = new RerunRecommenderUser(p.first);
-        if(p.second->getRecommendedAlgorithm() == "gen") {
-            userMap[p.first] = new GenreRecommenderUser(p.first);
-        }
+            userMap[p.first] = p.second->clone();
     }
     possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
 };

@@ -79,6 +79,9 @@ void LengthRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
 }
 
+LengthRecommenderUser *LengthRecommenderUser::clone() const {
+    return new LengthRecommenderUser(*this);
+}
 
 
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
@@ -94,6 +97,10 @@ Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
 void RerunRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
     std::cout << history.size() << std::endl;
+}
+
+RerunRecommenderUser *RerunRecommenderUser::clone() const {
+    return new RerunRecommenderUser(*this);
 }
 
 
@@ -231,6 +238,10 @@ std::string GenreRecommenderUser::getPopular(const std::vector<Watchable*> &_his
          }
          return popularTag.first;
      }
+}
+
+GenreRecommenderUser *GenreRecommenderUser::clone() const {
+    return new GenreRecommenderUser(*this);
 }
 
 

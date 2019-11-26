@@ -155,11 +155,12 @@ void Session::start() {
         }
 
     }
-    BaseAction* exit = new Exit();
-    exit->act(*this);
     command = "";
     second = "";
     third = "";
+    BaseAction* exit = new Exit();
+    exit->act(*this);
+
 }
 
 void Session::add_to_user_map(User* user, std::string &name){
@@ -200,6 +201,7 @@ Session::Session(const Session &other) {
 Session &Session::operator=(const Session &other) {
     if(this != &other){
         activeUser = other.activeUser;
+        clear();
         fillDataStructures(other.content, other.actionsLog, other.userMap);
     }
     return(*this);
@@ -214,6 +216,11 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
         actionsLog.push_back(action);
     }
     for(std::pair<std::string, User*> p: _userMap){
-        userMap[p.first] = p.second;
+        if(p.second->getRecommendedAlgorithm() == "len")
+            userMap[p.first] = new LengthRecommenderUser(p.first);
+        if(p.second->getRecommendedAlgorithm() == "rer")
+            userMap[p.first] = new RerunRecommenderUser(p.first);
+        if(p.second->getRecommendedAlgorithm() == "gen")
+            userMap[p.first] = new GenreRecommenderUser(p.first);
     }
 };

@@ -13,9 +13,17 @@ class Session;
 class User{
 public:
     User(const std::string& name);
-    //virtual  ~User();
-
-  //  static void clean(const std::vector<Watchable*> &_history);
+    //destructor
+//    virtual ~User();
+//    static void clean(const std::vector<Watchable*> &_history);
+//    //copy constructor
+//    User(const User& otherUser);
+//    //copy assignment operator
+//    User&operator=(const User& other);
+    //move constructor
+//    User(const User&& other);
+//    //move assignment operator
+//    User&&operator=(const User&& other);
     virtual Watchable* getRecommendation(Session& s) = 0;
     std::string getName() const;
     std::string getRecommendedAlgorithm() const;
@@ -24,7 +32,7 @@ public:
     virtual void addToHistory(Watchable*) = 0;
 
 protected:
-    void setRecommendedAlgorithm(std::string) ;
+    void setRecommendedAlgorithm(std::string);
     std::vector<Watchable*> history;
 private:
     const std::string name;
@@ -45,6 +53,7 @@ private:
 
 class RerunRecommenderUser : public User {
 public:
+
     RerunRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
     void addToHistory(Watchable*);
@@ -55,6 +64,7 @@ private:
 class GenreRecommenderUser : public User {
 public:
     void addToHistory(Watchable*);
+    virtual ~GenreRecommenderUser();
     GenreRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
     std::string getNextPopular(std::vector<std::string>&);

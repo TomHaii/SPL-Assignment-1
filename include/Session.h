@@ -16,11 +16,11 @@ public:
     //destructor
     ~Session();
     //copy constructor
-
     Session(const Session& other);
     //copy assignment operator
     Session& operator=(const Session& other);
-
+    Session(const Session&& other);
+    Session&operator=(const Session&& other);
     void fillDataStructures(const std::vector<Watchable*> &_content, const std::vector<BaseAction*> &_actionLog, const std::unordered_map<std::string, User*> &_userMap);
 
     void start();

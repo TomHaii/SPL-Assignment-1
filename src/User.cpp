@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
+#include <cstring>
 
 
 User::User(const std::string  &_name):name(_name){
@@ -37,9 +38,27 @@ void User::set_history(std::vector<Watchable*> _history) {
 //}
 //
 //User::~User(){
-//
+//    clean(history);
 //}
-
+//
+//User::User(const User& otherUser):name(otherUser.name), recommendedAlgorithm(otherUser.recommendedAlgorithm){
+//    for(Watchable* cont: otherUser.get_history()){
+//        history.push_back(cont);
+//    }
+//}
+//
+//User &User::operator=(const User& other) {
+//    if(&other != this){
+//        recommendedAlgorithm = other.recommendedAlgorithm;
+//        clean(history);
+//        for(Watchable* cont: other.get_history()){
+//            history.push_back(cont);
+//        }
+//    }
+//    return *this;
+//}
+//
+//
 
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
     setRecommendedAlgorithm("len");
@@ -66,8 +85,6 @@ void LengthRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
 }
 
-
-
 RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
     setRecommendedAlgorithm("rer");
     lastRecommendation = -1;
@@ -80,6 +97,7 @@ Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
 
 void RerunRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
+    std::cout << history.size() << std::endl;
 }
 
 GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name){
@@ -95,7 +113,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
     long i = 1;
     while (!wantedTag.empty()) {
         i++;
-        for (Watchable *w : s.getContent()) {
+        for (Watchable *&w : s.getContent()) {
             std::vector<std::string> tags = w->getTags();
             if ((std::find(tags.begin(), tags.end(), wantedTag) != tags.end() &&
                  (!(std::find(history.begin(), history.end(), *&w) != history.end())))) {
@@ -141,6 +159,13 @@ std::string GenreRecommenderUser::getNextPopular(std::vector<std::string>& prevT
     }
     return bestNextTag;
 }
+
+GenreRecommenderUser::~GenreRecommenderUser() {
+    tagsMap.clear();
+}
+
+
+
 
 
 

@@ -13,17 +13,6 @@ class Session;
 class User{
 public:
     User(const std::string& name);
-    //destructor
-//    virtual ~User();
-//    static void clean(const std::vector<Watchable*> &_history);
-//    //copy constructor
-//    User(const User& otherUser);
-//    //copy assignment operator
-//    User&operator=(const User& other);
-    //move constructor
-//    User(const User&& other);
-//    //move assignment operator
-//    User&&operator=(const User&& other);
     virtual Watchable* getRecommendation(Session& s) = 0;
     std::string getName() const;
     std::string getRecommendedAlgorithm() const;
@@ -56,21 +45,22 @@ public:
 
     RerunRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
-    void addToHistory(Watchable*);
+    virtual void addToHistory(Watchable*);
 private:
     long lastRecommendation;
 };
 
 class GenreRecommenderUser : public User {
 public:
-    void addToHistory(Watchable*);
-    virtual ~GenreRecommenderUser();
+    virtual void addToHistory(Watchable*);
+//    virtual ~GenreRecommenderUser();
     GenreRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
-    std::string getNextPopular(std::vector<std::string>&);
+    std::string getPopular(const std::vector<Watchable*> &_history);
+   // std::string getNextPopular(std::vector<std::string>&);
 private:
-    std::unordered_map<std::string,long> tagsMap;
-    std::pair<std::string, long> mostPopularTag;
+   // std::unordered_map<std::string,long> tagsMap;
+  //  std::pair<std::string, long> mostPopularTag;
 };
 
 #endif

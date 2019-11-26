@@ -33,6 +33,7 @@ private:
 class Movie : public Watchable{
 public:
     Movie(long id, const std::string& name, int length, const std::vector<std::string>& tags);
+    Movie(const Movie& otherMovie);
     virtual std::string toString() const;
     virtual std::string toStringHistory() const;
     virtual Watchable* getNextWatchable(Session&) const;
@@ -46,6 +47,7 @@ private:
 class Episode : public Watchable{
 public:
     Episode(long id, const std::string& seriesName,int length, int season, int episode ,const std::vector<std::string>& tags);
+    Episode(const Episode& otherMovie);
     virtual std::string toString() const;
     virtual std::string toStringHistory() const;
     virtual Watchable* getNextWatchable(Session&) const;

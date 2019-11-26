@@ -160,7 +160,7 @@ void Session::start() {
     third = "";
     BaseAction* exit = new Exit();
     exit->act(*this);
-
+    actionsLog.push_back(exit);
 }
 
 void Session::add_to_user_map(User* user, std::string &name){
@@ -177,11 +177,13 @@ std::vector<BaseAction*>& Session::getActionsLog(){
 
 
 Session::~Session() {
+    std::cout << "I am at destructor" << std::endl;
     delete(activeUser);
     clear();
 }
 
 void Session::clear(){
+    possibleActions.clear();
     for(Watchable* cont:content){
         delete cont;
     }
@@ -220,7 +222,9 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
             userMap[p.first] = new LengthRecommenderUser(p.first);
         if(p.second->getRecommendedAlgorithm() == "rer")
             userMap[p.first] = new RerunRecommenderUser(p.first);
-        if(p.second->getRecommendedAlgorithm() == "gen")
+        if(p.second->getRecommendedAlgorithm() == "gen") {
             userMap[p.first] = new GenreRecommenderUser(p.first);
+        }
     }
+    possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
 };

@@ -179,7 +179,6 @@ PrintContentList *PrintContentList::clone() const {
 }
 
 void PrintWatchHistory::act(Session &sess){
-    std::string output = "watch history for " + sess.get_active_user().getName() + ":\n";
     std::cout<<"watch history for "+ sess.get_active_user().getName() + ":"<<std::endl;
     int i = 1;
     for(Watchable* w : sess.get_active_user().get_history()) {

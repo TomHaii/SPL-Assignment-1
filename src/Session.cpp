@@ -176,12 +176,10 @@ std::vector<BaseAction*>& Session::getActionsLog(){
 
 
 Session::~Session() {
-    std::cout << "I am at destructor" << std::endl;
     clear();
 }
 
 void Session::clear(){
-    delete(activeUser);
     possibleActions.clear();
     for(Watchable* cont:content){
         delete cont;
@@ -207,8 +205,8 @@ Session &Session::operator=(const Session &other) {
     if(this != &other){
         clear();
         fillDataStructures(other.content, other.actionsLog, other.userMap);
-        for(std::pair<std::string, User*> user: other.userMap){
-            if(activeUser->getName() == user.first){
+        for(std::pair<std::string, User*> user: userMap){
+            if(other.activeUser->getName() == user.first){
                 activeUser = user.second;
             }
         }
@@ -227,8 +225,17 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
     for(BaseAction* action: _actionLog){
         actionsLog.push_back(action->clone());
     }
-    for(std::pair<std::string, User*> p: _userMap){
-            userMap[p.first] = p.second->clone();
+    for(std::pair<std::string, User*> user: _userMap){
+        User* newUser = user.second->clone();
+        userMap[user.first] = newUser;
+        newUser->set_history({});
+        for (Watchable* w : user.second->get_history()){
+            for (Watchable* cont : content){
+                if (w->toString() == cont->toString()){
+                    newUser->addToHistory(cont);
+                }
+            }
+        }
     }
     possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
 };

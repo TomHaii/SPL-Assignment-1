@@ -96,7 +96,7 @@ Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
 
 void RerunRecommenderUser::addToHistory(Watchable* w) {
     history.push_back(w);
-    std::cout << history.size() << std::endl;
+
 }
 
 RerunRecommenderUser *RerunRecommenderUser::clone() const {
@@ -104,71 +104,9 @@ RerunRecommenderUser *RerunRecommenderUser::clone() const {
 }
 
 
-GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name){
+GenreRecommenderUser::GenreRecommenderUser(const std::string& _name):User(_name) {
     setRecommendedAlgorithm("gen");
-  //  mostPopularTag.first="";
-  //  mostPopularTag.second=-1;
 }
-//
-//Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
-//    std::vector<std::string> prevTags;
-//    std::string wantedTag = mostPopularTag.first;
-//    Watchable *next = nullptr;
-//    long i = 1;
-//    while (!wantedTag.empty()) {
-//        i++;
-//        for (Watchable *w : s.getContent()) {
-//            std::vector<std::string> tags = w->getTags();
-//            if ((std::find(tags.begin(), tags.end(), wantedTag) != tags.end() &&
-//                 (!(std::find(history.begin(), history.end(), *&w) != history.end())))) {
-//                return w;
-//            }
-//        }
-//        prevTags.push_back(wantedTag);
-//        wantedTag = getNextPopular(prevTags);
-//    }
-//    return next;
-//
-//}
-//
-//void GenreRecommenderUser::addToHistory(Watchable* w) {
-//    history.push_back(w);
-//    for (std::string &tag : w->getTags()) {
-//        tagsMap[tag]++;
-//        if (tagsMap.count(tag) == 0){
-//            tagsMap[tag] = 1;
-//        }
-//        if ((tagsMap[tag] > mostPopularTag.second) || (tagsMap[tag] == mostPopularTag.second && tag.compare(mostPopularTag.first)<0)) {
-//            mostPopularTag.first = tag;
-//            mostPopularTag.second = tagsMap[tag];
-//        }
-//    }
-//}
-//
-//
-//
-//std::string GenreRecommenderUser::getNextPopular(std::vector<std::string>& prevTags) {
-//    long bestTagNum=0;
-//    std::string bestNextTag;
-//    long currNum;
-//    std::string currTag;
-//    for (std::pair<std::string, long> p : tagsMap){
-//        currTag = p.first;
-//        currNum = p.second;
-//        if ((!(std::find(prevTags.begin(), prevTags.end(), currTag) != prevTags.end()))&&
-//            ((currNum > bestTagNum) || (currNum == bestTagNum && currTag.compare(bestNextTag) < 0))){
-//            bestNextTag = currTag;
-//            bestTagNum = currNum;
-//        }
-//    }
-//    return bestNextTag;
-//}
-
-//GenreRecommenderUser::~GenreRecommenderUser() {
-//    std::cout << "Genre Destructor" << std::endl;
-//    tagsMap.clear();
-//    mostPopularTag.first.clear();
-//}
 
 Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
     std::unordered_map<std::string,long> map;

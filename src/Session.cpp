@@ -79,7 +79,7 @@ std::unordered_map<std::string,User*> Session::getUserMap() const{
 
 
 void Session::start() {
-    std::vector<std::string> possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
+    std::vector<std::string> possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchhist", "exit"};
     std::cout<<"SPLFLIX is now on!"<<std::endl;
     while (command != "exit") {
         command = "";
@@ -148,7 +148,7 @@ void Session::start() {
                 }
             }
         }
-        else if (command == "watchlist"){
+        else if (command == "watchhist"){
             BaseAction* watchlist = new PrintWatchHistory;
             watchlist->act(*this);
             actionsLog.push_back(watchlist);

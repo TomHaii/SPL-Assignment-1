@@ -47,6 +47,11 @@ Session::Session(const std::string &configFilePath) {
 
 }
 
+std::vector<BaseAction*> Session::getActionsLog() const{
+    return actionsLog;
+}
+
+
 std::vector<Watchable*> Session::getContent() const {
     return content;
 }
@@ -99,7 +104,7 @@ void Session::start() {
         else if(command == "changeuser"){
             BaseAction* changeuser = new ChangeActiveUser();
             changeuser->act(*this);
-            actionsLog.push_back(changeuser);
+//            actionsLog.push_back(changeuser);
         }
         else if(command == "deleteuser"){
             BaseAction* deleteuser = new DeleteUser();
@@ -171,9 +176,7 @@ void Session::change_user(User *user) {
     activeUser = user;
 }
 
-std::vector<BaseAction*>& Session::getActionsLog(){
-    return actionsLog;
-}
+
 
 
 Session::~Session() {
@@ -274,3 +277,4 @@ Session& Session::operator=(const Session&& other){
     }
     return *this;
 }
+

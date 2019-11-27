@@ -24,11 +24,11 @@ public:
     void fillDataStructures(const std::vector<Watchable*> &_content, const std::vector<BaseAction*> &_actionLog, const std::unordered_map<std::string, User*> &_userMap);
     void start();
     User& getActiveUser() const;
+    std::vector<BaseAction*> getActionsLog() const;
     std::unordered_map<std::string,User*> getUserMap() const;
     void add_to_user_map(User* user, std::string &name);
     void change_user(User* user);
     void erase_user(std::string name);
-    std::vector<BaseAction*>& getActionsLog();
     std::string secondInput() const;
     std::string thirdInput() const;
     void clear();

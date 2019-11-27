@@ -43,16 +43,18 @@ std::string BaseAction::toStringHelper(const std::string &s) const{
     return s + " COMPLETED";
 }
 
+BaseAction::~BaseAction() = default;
 
-void CreateUser::act(Session& sess){
+
+//bb
+void CreateUser::act(Session& sess) {
     std::string user_name = sess.secondInput();
     std::string algorithm = sess.thirdInput();
-    if (user_name.empty() || algorithm.empty()){
+    if (user_name.empty() || algorithm.empty()) {
         error("invalid input");
-    }
-    else if (sess.getUserMap().count(user_name) > 0) { //username taken
+    } else if (sess.getUserMap().count(user_name) > 0) { //username taken
         error("the user name inserted is already taken");
-    } else if (algorithm != "len" & algorithm != "rer" & algorithm != "gen") { //not an algorithm
+    } else if ((algorithm == "len") & (algorithm != "rer") & (algorithm != "gen")) { //not an algorithm
         error("invalid algorithm");
     } else {
         User *new_user;
@@ -65,8 +67,9 @@ void CreateUser::act(Session& sess){
         }
         sess.add_to_user_map(new_user, user_name);
         complete();
-        }
+    }
 }
+
 
 std::string CreateUser::toString() const {
     return toStringHelper("CreateUser");
@@ -75,6 +78,10 @@ std::string CreateUser::toString() const {
 CreateUser *CreateUser::clone() const{
     return new CreateUser(*this);
 }
+//
+//CreateUser::~CreateUser() {
+//
+//}
 
 void ChangeActiveUser::act(Session &sess) {
     std::string user_name = sess.secondInput();
@@ -99,6 +106,10 @@ std::string ChangeActiveUser::toString() const {
 ChangeActiveUser *ChangeActiveUser::clone() const{
     return new ChangeActiveUser(*this);
 }
+
+//ChangeActiveUser::~ChangeActiveUser() {
+//
+//}
 
 
 void DeleteUser::act(Session &sess) {
@@ -125,6 +136,10 @@ std::string DeleteUser::toString() const {
 DeleteUser *DeleteUser::clone() const {
     return new DeleteUser(*this);
 }
+
+//DeleteUser::~DeleteUser() {
+//
+//}
 
 void DuplicateUser::act(Session &sess) {
     std::string orig_user = sess.secondInput();
@@ -163,6 +178,10 @@ DuplicateUser *DuplicateUser::clone() const {
     return new DuplicateUser(*this);
 }
 
+//DuplicateUser::~DuplicateUser() {
+//
+//}
+
 void PrintContentList::act(Session &sess){
     for(Watchable* w : sess.getContent()){
         std::cout << w->toString() <<std::endl;
@@ -177,6 +196,10 @@ std::string PrintContentList::toString() const {
 PrintContentList *PrintContentList::clone() const {
     return new PrintContentList(*this);
 }
+
+//PrintContentList::~PrintContentList() {
+//
+//}
 
 void PrintWatchHistory::act(Session &sess){
     std::cout << "watch history for " + sess.getActiveUser().getName() + ":" << std::endl;
@@ -196,6 +219,10 @@ PrintWatchHistory *PrintWatchHistory::clone() const {
     return new PrintWatchHistory(*this);
 }
 
+//PrintWatchHistory::~PrintWatchHistory() {
+//
+//}
+
 void Watch::act(Session &sess) {
     std::string _id = sess.secondInput();
     std::string::const_iterator it = _id.begin();
@@ -207,7 +234,7 @@ void Watch::act(Session &sess) {
         error("invalid input");
     }
     else {
-        long id = std::stol(_id);
+        unsigned long id = std::stol(_id);
         if (id > sess.getContent().size()) {
             error("invalid id inserted");
         } else {
@@ -228,8 +255,12 @@ Watch *Watch::clone() const {
     return new Watch(*this);
 }
 
+//Watch::~Watch() {
+//
+//}
+
 void PrintActionsLog::act(Session &sess) {
-    std::vector<BaseAction*>& log = sess.getActionsLog();
+    std::vector<BaseAction*> log = sess.getActionsLog();
     for (long i = (long) log.size()-1; i >= 0; i--){
         BaseAction* action = log.at(i);
         std::cout << action->toString() << std::endl;
@@ -244,6 +275,10 @@ PrintActionsLog *PrintActionsLog::clone() const {
     return new PrintActionsLog(*this);
 }
 
+//PrintActionsLog::~PrintActionsLog() {
+//
+//}
+
 void Exit::act(Session& sess) {
     std::cout <<"LEAVING SPLFLIX"<<std::endl;
     std::cout <<"See you next time!"<<std::endl;
@@ -257,6 +292,10 @@ std::string Exit::toString() const {
 Exit *Exit::clone() const {
     return new Exit(*this);
 }
+
+//Exit::~Exit() {
+//
+//}
 
 
 

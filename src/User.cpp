@@ -7,7 +7,7 @@
 #include <cstring>
 
 
-User::User(const std::string  &_name):name(_name){
+User::User(const std::string  &_name) : name(_name), history{{}}{
     recommendedAlgorithm = "len";
 }
 
@@ -35,9 +35,9 @@ void User::addToHistory(Watchable* w) {
     history.push_back(w);
 }
 
-LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
+
+LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name), average(0) {
     setRecommendedAlgorithm("len");
-    average = 0;
 }
 
 Watchable* LengthRecommenderUser::getRecommendation(Session& s){
@@ -65,9 +65,8 @@ LengthRecommenderUser *LengthRecommenderUser::clone() const {
 }
 
 
-RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name){
+RerunRecommenderUser::RerunRecommenderUser(const std::string& _name):User(_name), lastRecommendation(-1){
     setRecommendedAlgorithm("rer");
-    lastRecommendation = -1;
 }
 
 Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
@@ -136,6 +135,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
 GenreRecommenderUser *GenreRecommenderUser::clone() const {
     return new GenreRecommenderUser(*this);
 }
+
 
 
 

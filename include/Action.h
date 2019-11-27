@@ -14,7 +14,7 @@ enum ActionStatus{
 class BaseAction{
 public:
     BaseAction();
-     ~BaseAction();
+    virtual ~BaseAction();
     virtual BaseAction* clone() const = 0;
     ActionStatus getStatus() const;
     virtual void act(Session& sess)=0;

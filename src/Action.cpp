@@ -54,7 +54,7 @@ void CreateUser::act(Session& sess) {
         error("invalid input");
     } else if (sess.getUserMap().count(user_name) > 0) { //username taken
         error("the user name inserted is already taken");
-    } else if ((algorithm == "len") & (algorithm != "rer") & (algorithm != "gen")) { //not an algorithm
+    } else if (algorithm != "len" & algorithm != "rer" & algorithm != "gen") { //not an algorithm
         error("invalid algorithm");
     } else {
         User *new_user;
@@ -78,7 +78,7 @@ std::string CreateUser::toString() const {
 CreateUser *CreateUser::clone() const{
     return new CreateUser(*this);
 }
-//
+
 //CreateUser::~CreateUser() {
 //
 //}

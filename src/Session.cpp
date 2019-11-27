@@ -104,7 +104,7 @@ void Session::start() {
         else if(command == "changeuser"){
             BaseAction* changeuser = new ChangeActiveUser();
             changeuser->act(*this);
-//            actionsLog.push_back(changeuser);
+            actionsLog.push_back(changeuser);
         }
         else if(command == "deleteuser"){
             BaseAction* deleteuser = new DeleteUser();

@@ -7,7 +7,8 @@
 #include <cstring>
 
 
-User::User(const std::string  &_name) : name(_name), history{{}}{
+User::User(const std::string  &_name) : name(_name){
+    history = {};
     recommendedAlgorithm = "len";
 }
 
@@ -33,6 +34,10 @@ void User::set_history(std::vector<Watchable*> _history) {
 
 void User::addToHistory(Watchable* w) {
     history.push_back(w);
+}
+
+User::~User() {
+
 }
 
 
@@ -136,7 +141,13 @@ GenreRecommenderUser *GenreRecommenderUser::clone() const {
     return new GenreRecommenderUser(*this);
 }
 
+void RerunRecommenderUser::addToHistory(Watchable * w) {
+    history.push_back(w);
+}
 
+void GenreRecommenderUser::addToHistory(Watchable * w) {
+    history.push_back(w);
+}
 
 
 

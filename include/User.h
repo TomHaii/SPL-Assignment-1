@@ -14,12 +14,13 @@ class User{
 public:
     User(const std::string& name);
     virtual Watchable* getRecommendation(Session& s) = 0;
+    virtual ~User();
     virtual User* clone() const = 0;
     std::string getName() const;
     std::string getRecommendedAlgorithm() const;
     std::vector<Watchable*> get_history() const;
     void set_history(std::vector<Watchable*> _history);
-    virtual void addToHistory(Watchable*);
+    virtual void addToHistory(Watchable*) = 0;
 
 protected:
     void setRecommendedAlgorithm(std::string);
@@ -47,6 +48,8 @@ public:
     RerunRecommenderUser(const std::string& name);
     virtual RerunRecommenderUser* clone() const;
     virtual Watchable* getRecommendation(Session& s);
+    virtual void addToHistory(Watchable*);
+
 private:
     long lastRecommendation;
 };
@@ -56,9 +59,9 @@ public:
     virtual GenreRecommenderUser* clone() const;
     GenreRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
+    virtual void addToHistory(Watchable*);
 
 private:
-
 };
 
 #endif

@@ -12,14 +12,9 @@ public:
     Watchable(long id, int length, const std::vector<std::string>& tags);
     std::vector<std::string> getTags() const;
     long getId() const;
-    //Do we need all these?:
-
     //destructor
-    //virtual ~Watchable();
-    //copy constructor
-    //copy assignment operator
-    //move constructor
-    //move assignment operator
+    virtual ~Watchable();
+
     virtual int getLength() const;
     virtual Watchable* clone() const = 0;
     virtual std::string toString() const = 0;

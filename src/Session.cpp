@@ -44,14 +44,14 @@ Session::Session(const std::string &configFilePath) {
     User* DEFAULT = new LengthRecommenderUser("DEFAULT");
     userMap["DEFAULT"] = DEFAULT;
     activeUser = DEFAULT;
-    possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
+
 }
 
 std::vector<Watchable*> Session::getContent() const {
     return content;
 }
 
-User& Session::get_active_user(){
+User& Session::getActiveUser() const{
     return *activeUser;
 }
 
@@ -75,6 +75,7 @@ std::unordered_map<std::string,User*> Session::getUserMap() const{
 
 
 void Session::start() {
+    std::vector<std::string> possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
     std::cout<<"SPLFLIX is now on!"<<std::endl;
     while (command != "exit") {
         command = "";
@@ -180,7 +181,6 @@ Session::~Session() {
 }
 
 void Session::clear(){
-    possibleActions.clear();
     for(Watchable* cont:content){
         delete cont;
     }
@@ -218,7 +218,6 @@ Session &Session::operator=(const Session &other) {
 
 void Session::fillDataStructures(const std::vector<Watchable *> &_content, const std::vector<BaseAction *> &_actionLog,
                                  const std::unordered_map<std::string, User *> &_userMap) {
-
     for(Watchable* cont: _content){
         content.push_back(cont->clone());
     }
@@ -237,5 +236,41 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
             }
         }
     }
-    possibleActions = {"createuser", "changeuser", "deleteuser", "dupuser", "content", "watch", "log", "watchlist", "exit"};
-};
+}
+
+
+Session::Session(const Session&& other){
+    *this = other;
+    for(Watchable* cont:other.content){
+        cont = nullptr;
+    }
+    for(BaseAction* action: other.actionsLog){
+        action = nullptr;
+    }
+    for(std::pair<std::string, User*> us: other.userMap){
+        us.first = "";
+        us.second = nullptr;
+    }
+}
+
+
+Session& Session::operator=(const Session&& other){
+    if(this != &other){
+        clear();
+        content = other.content;
+        actionsLog = other.actionsLog;
+        userMap = other.userMap;
+        activeUser = other.activeUser;
+        for(Watchable* cont:other.content){
+            cont = nullptr;
+        }
+        for(BaseAction* action: other.actionsLog){
+            action = nullptr;
+        }
+        for(std::pair<std::string, User*> us: other.userMap){
+            us.first = "";
+            us.second = nullptr;
+        }
+    }
+    return *this;
+}

@@ -23,7 +23,7 @@ public:
     Session&operator=(const Session&& other);
     void fillDataStructures(const std::vector<Watchable*> &_content, const std::vector<BaseAction*> &_actionLog, const std::unordered_map<std::string, User*> &_userMap);
     void start();
-    User& get_active_user();
+    User& getActiveUser() const;
     std::unordered_map<std::string,User*> getUserMap() const;
     void add_to_user_map(User* user, std::string &name);
     void change_user(User* user);
@@ -35,7 +35,6 @@ public:
 
 
 private:
-    std::vector<std::string> possibleActions;
     std::string command;
     std::string second;
     std::string third;

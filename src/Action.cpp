@@ -110,7 +110,7 @@ void DeleteUser::act(Session &sess) {
         std::unordered_map<std::string, User *> map = sess.getUserMap();
         if (map.count(user_name) == 0) {
             error("no such user");
-        } else if (sess.get_active_user().getName() == user_name) {
+        } else if (sess.getActiveUser().getName() == user_name) {
             sess.change_user(map["DEFAULT"]);
         }
         sess.erase_user(user_name);
@@ -179,9 +179,9 @@ PrintContentList *PrintContentList::clone() const {
 }
 
 void PrintWatchHistory::act(Session &sess){
-    std::cout<<"watch history for "+ sess.get_active_user().getName() + ":"<<std::endl;
+    std::cout << "watch history for " + sess.getActiveUser().getName() + ":" << std::endl;
     int i = 1;
-    for(Watchable* w : sess.get_active_user().get_history()) {
+    for(Watchable* w : sess.getActiveUser().get_history()) {
         std::cout << std::to_string(i) + ". " + w->toStringHistory() << std::endl;
         i++;
     }
@@ -213,7 +213,7 @@ void Watch::act(Session &sess) {
         } else {
             Watchable *w = sess.getContent().at(id - 1);
             std::cout << "Watching " + w->toStringHistory() << std::endl;
-            sess.get_active_user().addToHistory(w);
+            sess.getActiveUser().addToHistory(w);
             complete();
         }
     }

@@ -12,9 +12,7 @@
 #include <unordered_map>
 
 
-BaseAction::BaseAction(){
-    errorMsg = "";
-    status = PENDING;
+BaseAction::BaseAction(): errorMsg(""), status(PENDING){
 }
 
 ActionStatus BaseAction::getStatus() const{
@@ -54,7 +52,7 @@ void CreateUser::act(Session& sess) {
         error("invalid input");
     } else if (sess.getUserMap().count(user_name) > 0) { //username taken
         error("the user name inserted is already taken");
-    } else if (algorithm != "len" & algorithm != "rer" & algorithm != "gen") { //not an algorithm
+    } else if ((algorithm != "len") & (algorithm != "rer") & (algorithm != "gen")) { //not an algorithm
         error("invalid algorithm");
     } else {
         User *new_user;

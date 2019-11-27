@@ -52,9 +52,9 @@ public:
     virtual void setNextEpisode(long);
     virtual std::string getName() const;
 private:
-    std::string seriesName;
     int season;
     int episode;
+    std::string seriesName;
     long nextEpisodeId;
 
 };

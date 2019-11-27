@@ -7,9 +7,7 @@
 #include <cstring>
 
 
-User::User(const std::string  &_name) : name(_name){
-    history = {};
-    recommendedAlgorithm = "len";
+User::User(const std::string  &_name) :history({}), name(_name),recommendedAlgorithm("len"){
 }
 
 std::string User::getName() const {

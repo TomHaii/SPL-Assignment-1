@@ -10,12 +10,12 @@
 #include <sstream>
 
 using json = nlohmann::json;
-Session::Session(const std::string &configFilePath) {
+Session::Session(const std::string &configFilePath):command(""), second(""),third(""),content({}), actionsLog({}), userMap({}), activeUser(nullptr){
     std::ifstream i(configFilePath);
     json j;
     i >> j;
     json movies = j["movies"];
-    long id = 1;
+    unsigned long id = 1;
     for(json& movie: movies) {
         Movie* tmpMovie = new Movie(id, movie["name"], movie["length"], movie["tags"]);
         content.push_back(tmpMovie);
@@ -24,10 +24,10 @@ Session::Session(const std::string &configFilePath) {
     json series = j["tv_series"];
     for (json& tmp_series: series) {
         json seasonsList = tmp_series.at("seasons");
-        for (int k = 0; k < seasonsList.size(); k++) {
+        for (unsigned int k = 0; k < seasonsList.size(); k++) {
             bool last = (k==seasonsList.size()-1);
-            long episodesNumber = tmp_series.at("seasons")[k];
-            for (long e = 1; e <= episodesNumber; e++) {
+            unsigned long episodesNumber = tmp_series.at("seasons")[k];
+            for (unsigned long e = 1; e <= episodesNumber; e++) {
                 Episode *tmpEpisode = new Episode(id, tmp_series["name"], tmp_series["episode_length"], k + 1, e, tmp_series["tags"]);
                 if (!last || (e+1 <= episodesNumber)){
                     tmpEpisode->setNextEpisode(id);
@@ -40,7 +40,9 @@ Session::Session(const std::string &configFilePath) {
             }
         }
     }
-    command=""; second=""; third="";
+//    command="";
+//    second="";
+//    third="";
     User* DEFAULT = new LengthRecommenderUser("DEFAULT");
     userMap["DEFAULT"] = DEFAULT;
     activeUser = DEFAULT;
@@ -195,7 +197,7 @@ void Session::clear(){
     }
 }
 
-Session::Session(const Session &other) {
+Session::Session(const Session &other):command(""), second(""),third(""),content({}), actionsLog({}), userMap({}), activeUser(nullptr) {
     fillDataStructures(other.content, other.actionsLog, other.userMap);
     for(std::pair<std::string, User*> user: userMap){
         if(other.activeUser->getName() == user.first){
@@ -242,14 +244,14 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
 }
 
 
-Session::Session(const Session&& other){
+Session::Session(const Session&& other):command(""), second(""),third(""),content({}), actionsLog({}), userMap({}), activeUser(nullptr){
     *this = other;
-    for(Watchable* cont:other.content){
-        cont = nullptr;
-    }
-    for(BaseAction* action: other.actionsLog){
-        action = nullptr;
-    }
+//    for(Watchable* cont:other.content){
+//        cont = nullptr;
+//    }
+//    for(BaseAction* action: other.actionsLog){
+//        action = nullptr;
+//    }
     for(std::pair<std::string, User*> us: other.userMap){
         us.first = "";
         us.second = nullptr;
@@ -264,12 +266,12 @@ Session& Session::operator=(const Session&& other){
         actionsLog = other.actionsLog;
         userMap = other.userMap;
         activeUser = other.activeUser;
-        for(Watchable* cont:other.content){
-            cont = nullptr;
-        }
-        for(BaseAction* action: other.actionsLog){
-            action = nullptr;
-        }
+//        for(Watchable* cont:other.content){
+//            cont = nullptr;
+//        }
+//        for(BaseAction* action: other.actionsLog){
+//            action = nullptr;
+//        }
         for(std::pair<std::string, User*> us: other.userMap){
             us.first = "";
             us.second = nullptr;

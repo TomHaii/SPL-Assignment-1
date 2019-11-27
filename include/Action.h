@@ -31,7 +31,6 @@ private:
 
 class CreateUser  : public BaseAction {
 public:
-//    virtual ~CreateUser();
     virtual CreateUser* clone() const;
     virtual void act(Session&);
     virtual std::string toString() const;
@@ -40,7 +39,6 @@ public:
 class ChangeActiveUser : public BaseAction {
 public:
     virtual ChangeActiveUser* clone() const;
-//    virtual ~ChangeActiveUser();
     virtual void act(Session&);
     virtual std::string toString() const;
 };
@@ -48,7 +46,6 @@ public:
 class DeleteUser : public BaseAction {
 public:
     virtual DeleteUser* clone() const;
-//    virtual ~DeleteUser();
     virtual void act(Session &);
     virtual std::string toString() const;
 };
@@ -57,7 +54,6 @@ public:
 class DuplicateUser : public BaseAction {
 public:
     virtual DuplicateUser* clone() const;
-//    virtual ~DuplicateUser();
     virtual void act(Session &);
     virtual std::string toString() const;
 };
@@ -65,7 +61,6 @@ public:
 class PrintContentList : public BaseAction {
 public:
     virtual PrintContentList* clone() const;
-//    virtual ~PrintContentList();
     virtual void act (Session&);
     virtual std::string toString() const;
 };
@@ -73,7 +68,6 @@ public:
 class PrintWatchHistory : public BaseAction {
 public:
     virtual PrintWatchHistory* clone() const;
-//    virtual ~PrintWatchHistory();
     virtual void act (Session&);
     virtual std::string toString() const;
 };
@@ -82,7 +76,6 @@ public:
 class Watch : public BaseAction {
 public:
     virtual Watch* clone() const;
-//    virtual ~Watch();
     virtual void act(Session&);
     virtual std::string toString() const;
 };
@@ -91,7 +84,6 @@ public:
 class PrintActionsLog : public BaseAction {
 public:
     virtual PrintActionsLog* clone() const;
-//    virtual ~PrintActionsLog();
     virtual void act(Session&);
     virtual std::string toString() const;
 };
@@ -99,7 +91,6 @@ public:
 class Exit : public BaseAction {
 public:
     virtual Exit* clone() const;
-//    virtual ~Exit();
     virtual void act(Session&);
     virtual std::string toString() const;
 };

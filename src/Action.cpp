@@ -77,10 +77,6 @@ CreateUser *CreateUser::clone() const{
     return new CreateUser(*this);
 }
 
-//CreateUser::~CreateUser() {
-//
-//}
-
 void ChangeActiveUser::act(Session &sess) {
     std::string user_name = sess.secondInput();
     if (user_name.empty()){
@@ -104,11 +100,6 @@ std::string ChangeActiveUser::toString() const {
 ChangeActiveUser *ChangeActiveUser::clone() const{
     return new ChangeActiveUser(*this);
 }
-
-//ChangeActiveUser::~ChangeActiveUser() {
-//
-//}
-
 
 void DeleteUser::act(Session &sess) {
     std::string user_name = sess.secondInput();
@@ -134,10 +125,6 @@ std::string DeleteUser::toString() const {
 DeleteUser *DeleteUser::clone() const {
     return new DeleteUser(*this);
 }
-
-//DeleteUser::~DeleteUser() {
-//
-//}
 
 void DuplicateUser::act(Session &sess) {
     std::string orig_user = sess.secondInput();
@@ -176,10 +163,6 @@ DuplicateUser *DuplicateUser::clone() const {
     return new DuplicateUser(*this);
 }
 
-//DuplicateUser::~DuplicateUser() {
-//
-//}
-
 void PrintContentList::act(Session &sess){
     for(Watchable* w : sess.getContent()){
         std::cout << w->toString() <<std::endl;
@@ -194,10 +177,6 @@ std::string PrintContentList::toString() const {
 PrintContentList *PrintContentList::clone() const {
     return new PrintContentList(*this);
 }
-
-//PrintContentList::~PrintContentList() {
-//
-//}
 
 void PrintWatchHistory::act(Session &sess){
     std::cout << "watch history for " + sess.getActiveUser().getName() + ":" << std::endl;
@@ -216,10 +195,6 @@ std::string PrintWatchHistory::toString() const {
 PrintWatchHistory *PrintWatchHistory::clone() const {
     return new PrintWatchHistory(*this);
 }
-
-//PrintWatchHistory::~PrintWatchHistory() {
-//
-//}
 
 void Watch::act(Session &sess) {
     std::string _id = sess.secondInput();
@@ -253,10 +228,6 @@ Watch *Watch::clone() const {
     return new Watch(*this);
 }
 
-//Watch::~Watch() {
-//
-//}
-
 void PrintActionsLog::act(Session &sess) {
     std::vector<BaseAction*> log = sess.getActionsLog();
     for (long i = (long) log.size()-1; i >= 0; i--){
@@ -273,10 +244,6 @@ PrintActionsLog *PrintActionsLog::clone() const {
     return new PrintActionsLog(*this);
 }
 
-//PrintActionsLog::~PrintActionsLog() {
-//
-//}
-
 void Exit::act(Session& sess) {
     std::cout <<"LEAVING SPLFLIX"<<std::endl;
     std::cout <<"See you next time!"<<std::endl;
@@ -291,9 +258,6 @@ Exit *Exit::clone() const {
     return new Exit(*this);
 }
 
-//Exit::~Exit() {
-//
-//}
 
 
 

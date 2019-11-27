@@ -40,9 +40,6 @@ Session::Session(const std::string &configFilePath):command(""), second(""),thir
             }
         }
     }
-//    command="";
-//    second="";
-//    third="";
     User* DEFAULT = new LengthRecommenderUser("DEFAULT");
     userMap["DEFAULT"] = DEFAULT;
     activeUser = DEFAULT;

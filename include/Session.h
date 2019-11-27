@@ -19,7 +19,9 @@ public:
     Session(const Session& other);
     //copy assignment operator
     Session& operator=(const Session& other);
+    //move constructor
     Session(const Session&& other);
+    //move assignment operator
     Session&operator=(const Session&& other);
     void fillDataStructures(const std::vector<Watchable*> &_content, const std::vector<BaseAction*> &_actionLog, const std::unordered_map<std::string, User*> &_userMap);
     void start();
@@ -32,8 +34,6 @@ public:
     std::string secondInput() const;
     std::string thirdInput() const;
     void clear();
-
-
 private:
     std::string command;
     std::string second;

@@ -31,28 +31,9 @@ void User::set_history(std::vector<Watchable*> _history) {
     history = std::move(_history);
 }
 
-//User::~User() {
-//    history.clear();
-//}
-//
-//User::User(const User& otherUser):name(otherUser.name), recommendedAlgorithm(otherUser.recommendedAlgorithm){
-//    for(Watchable* cont: otherUser.get_history()){
-//        history.push_back(cont);
-//    }
-//}
-//
-//User &User::operator=(const User& other) {
-//    if(&other != this){
-//        recommendedAlgorithm = other.recommendedAlgorithm;
-//        history.clear();
-//        for(Watchable* cont: other.get_history()){
-//            history.push_back(cont);
-//        }
-//    }
-//    return *this;
-//}
-
-
+void User::addToHistory(Watchable* w) {
+    history.push_back(w);
+}
 
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name) {
     setRecommendedAlgorithm("len");
@@ -94,10 +75,6 @@ Watchable* RerunRecommenderUser::getRecommendation(Session& s) {
     return history.at(lastRecommendation);
 }
 
-void RerunRecommenderUser::addToHistory(Watchable* w) {
-    history.push_back(w);
-
-}
 
 RerunRecommenderUser *RerunRecommenderUser::clone() const {
     return new RerunRecommenderUser(*this);
@@ -156,50 +133,9 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
 
 }
 
-void GenreRecommenderUser::addToHistory(Watchable* w) {
-    history.push_back(w);
-}
-
-std::string GenreRecommenderUser::getPopular(const std::vector<Watchable*> &_history) {
-     std::unordered_map<std::string,long> map;
-     std::pair<std::string, long> popularTag;
-     for(Watchable* cont: _history){
-         for (std::string &tag : cont->getTags()) {
-             map[tag]++;
-             if (map.count(tag) == 0){
-                 map[tag] = 1;
-             }
-             if ((map[tag] > popularTag.second) || (map[tag] == popularTag.second && tag.compare(popularTag.first)<0)) {
-                 popularTag.first = tag;
-                 popularTag.second = map[tag];
-             }
-         }
-         return popularTag.first;
-     }
-}
-
 GenreRecommenderUser *GenreRecommenderUser::clone() const {
     return new GenreRecommenderUser(*this);
 }
-
-
-
-//std::string GenreRecommenderUser::getNextPopular(std::vector<std::string>& prevTags) {
-//    long bestTagNum=0;
-//    std::string bestNextTag;
-//    long currNum;
-//    std::string currTag;
-//    for (std::pair<std::string, long> p : tagsMap){
-//        currTag = p.first;
-//        currNum = p.second;
-//        if ((!(std::find(prevTags.begin(), prevTags.end(), currTag) != prevTags.end()))&&
-//            ((currNum > bestTagNum) || (currNum == bestTagNum && currTag.compare(bestNextTag) < 0))){
-//            bestNextTag = currTag;
-//            bestTagNum = currNum;
-//        }
-//    }
-//    return bestNextTag;
-//}
 
 
 

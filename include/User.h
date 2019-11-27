@@ -19,7 +19,7 @@ public:
     std::string getRecommendedAlgorithm() const;
     std::vector<Watchable*> get_history() const;
     void set_history(std::vector<Watchable*> _history);
-    virtual void addToHistory(Watchable*) = 0;
+    virtual void addToHistory(Watchable*);
 
 protected:
     void setRecommendedAlgorithm(std::string);
@@ -47,23 +47,18 @@ public:
     RerunRecommenderUser(const std::string& name);
     virtual RerunRecommenderUser* clone() const;
     virtual Watchable* getRecommendation(Session& s);
-    virtual void addToHistory(Watchable*);
 private:
     long lastRecommendation;
 };
 
 class GenreRecommenderUser : public User {
 public:
-    virtual void addToHistory(Watchable*);
     virtual GenreRecommenderUser* clone() const;
-    //    virtual ~GenreRecommenderUser();
     GenreRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
-    std::string getPopular(const std::vector<Watchable*> &_history);
-   // std::string getNextPopular(std::vector<std::string>&);
+
 private:
-   // std::unordered_map<std::string,long> tagsMap;
-  //  std::pair<std::string, long> mostPopularTag;
+
 };
 
 #endif

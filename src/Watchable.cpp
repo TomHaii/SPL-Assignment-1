@@ -11,7 +11,7 @@ Watchable::Watchable(long _id, int _length, const std::vector<std::string> &_tag
 
 }
 
-Watchable::~Watchable() = default;
+//Watchable::~Watchable() = default;
 
 Movie::Movie(long _id, const std::string& _name, int _length, const std::vector<std::string>& _tags):
         Watchable(_id, _length, _tags), name(_name)

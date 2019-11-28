@@ -132,9 +132,8 @@ void Session::start() {
                     if (next == nullptr) {
                         ans = "n";
                         std::cout << "No next recommendations" << std::endl;
-
                     } else {
-                        std::cout << "We recommend watching " + next->toStringHistory() + ", continue watching? [y/n]";
+                        std::cout << "We recommend watching " + next->toString() + ", continue watching? [y/n]";
                         getline(std::cin, ans);
                         if (ans != "y" && ans != "n") {
                             std::cout << "please choose y or n" << std::endl;
@@ -232,7 +231,7 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
         newUser->set_history({});
         for (Watchable* w : user.second->get_history()){
             for (Watchable* cont : content){
-                if (w->toString() == cont->toString()){
+                if (w->fullToString() == cont->fullToString()){
                     newUser->addToHistory(cont);
                 }
             }

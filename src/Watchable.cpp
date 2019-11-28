@@ -46,7 +46,7 @@ long Watchable::getId() const {
     return id;
 }
 
-std::string Movie::toString() const {
+std::string Movie::fullToString() const {
     std::string output = std::to_string(getId()) +". " + name + " " + std::to_string(getLength())+ " minutes [";
     for (std::string &s : getTags()){
         output += s + ", ";
@@ -56,8 +56,8 @@ std::string Movie::toString() const {
     return output;
 }
 
-std::string Episode::toString() const {
-    std::string output =  std::to_string(getId()) +". " + toStringHistory() + " ";
+std::string Episode::fullToString() const {
+    std::string output = std::to_string(getId()) + ". " + toString() + " ";
     output += std::to_string(getLength()) + " minutes [";
     for (const std::string& s : getTags()) {
         output += s + ", ";
@@ -67,7 +67,7 @@ std::string Episode::toString() const {
     return output;
 }
 
-std::string Movie::toStringHistory() const {
+std::string Movie::toString() const {
     return name;
 }
 
@@ -77,7 +77,7 @@ Movie* Movie::clone() const {
 Episode* Episode::clone() const {
     return new Episode(*this);
 }
-std::string Episode::toStringHistory() const {
+std::string Episode::toString() const {
     std::string ep = "E"; std::string sea = "S";
     if (season < 10){
         sea += "0" + std::to_string(season);

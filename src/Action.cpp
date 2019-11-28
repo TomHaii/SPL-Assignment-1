@@ -165,7 +165,7 @@ DuplicateUser *DuplicateUser::clone() const {
 
 void PrintContentList::act(Session &sess){
     for(Watchable* w : sess.getContent()){
-        std::cout << w->toString() <<std::endl;
+        std::cout << w->fullToString() << std::endl;
     }
     complete();
 }
@@ -182,7 +182,7 @@ void PrintWatchHistory::act(Session &sess){
     std::cout << "watch history for " + sess.getActiveUser().getName() + ":" << std::endl;
     int i = 1;
     for(Watchable* w : sess.getActiveUser().get_history()) {
-        std::cout << std::to_string(i) + ". " + w->toStringHistory() << std::endl;
+        std::cout << std::to_string(i) + ". " + w->toString() << std::endl;
         i++;
     }
     complete();
@@ -212,7 +212,7 @@ void Watch::act(Session &sess) {
             error("invalid id inserted");
         } else {
             Watchable *w = sess.getContent().at(id - 1);
-            std::cout << "Watching " + w->toStringHistory() << std::endl;
+            std::cout << "Watching " + w->toString() << std::endl;
             sess.getActiveUser().addToHistory(w);
             complete();
         }

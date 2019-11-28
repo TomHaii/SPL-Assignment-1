@@ -22,8 +22,8 @@ public:
 protected:
     std::string toStringHelper(const std::string&) const;
     void complete();
-    void error(const std::string& errorMsg);
     std::string getErrorMsg() const;
+    void error(const std::string& errorMsg);
 private:
     std::string errorMsg;
     ActionStatus status;

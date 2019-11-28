@@ -17,8 +17,8 @@ public:
 
     virtual int getLength() const;
     virtual Watchable* clone() const = 0;
+    virtual std::string fullToString() const = 0;
     virtual std::string toString() const = 0;
-    virtual std::string toStringHistory() const = 0;
     virtual Watchable* getNextWatchable(Session&) const = 0;
     virtual std::string getName() const = 0;
 
@@ -32,8 +32,8 @@ class Movie : public Watchable{
 public:
     Movie(long id, const std::string& name, int length, const std::vector<std::string>& tags);
     virtual Movie* clone() const;
+    virtual std::string fullToString() const;
     virtual std::string toString() const;
-    virtual std::string toStringHistory() const;
     virtual Watchable* getNextWatchable(Session&) const;
     virtual std::string getName() const;
 
@@ -45,9 +45,9 @@ private:
 class Episode : public Watchable{
 public:
     Episode(long id, const std::string& seriesName,int length, int season, int episode ,const std::vector<std::string>& tags);
-    virtual std::string toString() const;
+    virtual std::string fullToString() const;
     virtual Episode* clone() const;
-    virtual std::string toStringHistory() const;
+    virtual std::string toString() const;
     virtual Watchable* getNextWatchable(Session&) const;
     virtual void setNextEpisode(long);
     virtual std::string getName() const;

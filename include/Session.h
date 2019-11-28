@@ -24,6 +24,7 @@ public:
     //move assignment operator
     Session&operator=(const Session&& other);
     void fillDataStructures(const std::vector<Watchable*> &_content, const std::vector<BaseAction*> &_actionLog, const std::unordered_map<std::string, User*> &_userMap);
+    void stealDataStructures(const std::vector<Watchable*> &_content, const std::vector<BaseAction*> &_actionLog, const std::unordered_map<std::string, User*> &_userMap);
     void start();
     User& getActiveUser() const;
     std::vector<BaseAction*> getActionsLog() const;

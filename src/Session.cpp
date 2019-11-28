@@ -242,16 +242,12 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
 
 
 Session::Session(const Session&& other):command(""), second(""),third(""),content({}), actionsLog({}), userMap({}), activeUser(nullptr){
-    *this = other;
-//    for(Watchable* cont:other.content){
-//        cont = nullptr;
-//    }
-//    for(BaseAction* action: other.actionsLog){
-//        action = nullptr;
-//    }
-    for(std::pair<std::string, User*> us: other.userMap){
-        us.first = "";
-        us.second = nullptr;
+    std::string activeUSerName = other.activeUser->getName();
+    stealDataStructures(other.content, other.actionsLog, other.userMap);
+    for(std::pair<std::string, User*> user: userMap){
+        if(activeUSerName == user.first){
+            activeUser = user.second;
+        }
     }
 }
 
@@ -259,21 +255,41 @@ Session::Session(const Session&& other):command(""), second(""),third(""),conten
 Session& Session::operator=(const Session&& other){
     if(this != &other){
         clear();
-        content = other.content;
-        actionsLog = other.actionsLog;
-        userMap = other.userMap;
-        activeUser = other.activeUser;
-//        for(Watchable* cont:other.content){
-//            cont = nullptr;
-//        }
-//        for(BaseAction* action: other.actionsLog){
-//            action = nullptr;
-//        }
-        for(std::pair<std::string, User*> us: other.userMap){
-            us.first = "";
-            us.second = nullptr;
+        std::string activeUSerName = other.activeUser->getName();
+        stealDataStructures(other.content, other.actionsLog, other.userMap);
+        for(std::pair<std::string, User*> user: userMap){
+            if(activeUSerName == user.first){
+                activeUser = user.second;
+            }
         }
     }
     return *this;
+}
+
+void Session::stealDataStructures(const std::vector<Watchable *> &_content, const std::vector<BaseAction *> &_actionLog,
+                                  const std::unordered_map<std::string, User *> &_userMap) {
+
+    for(Watchable* cont: _content){
+        content.push_back(cont->clone());
+        cont = nullptr;
+    }
+    for(BaseAction* action: _actionLog){
+        actionsLog.push_back(action->clone());
+        action = nullptr;
+    }
+    for(std::pair<std::string, User*> user: _userMap){
+        User* newUser = user.second->clone();
+        userMap[user.first] = newUser;
+        newUser->set_history({});
+        for (Watchable* w : user.second->get_history()){
+            for (Watchable* cont : content){
+                if (w->toString() == cont->toString()){
+                    newUser->addToHistory(cont);
+                }
+            }
+        }
+        user.first = "";
+        user.second = nullptr;
+    }
 }
 

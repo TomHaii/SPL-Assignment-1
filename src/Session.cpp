@@ -40,6 +40,9 @@ Session::Session(const std::string &configFilePath):command(""), second(""),thir
             }
         }
     }
+    command = "";
+    second = "";
+    third = "";
     User* DEFAULT = new LengthRecommenderUser("DEFAULT");
     userMap["DEFAULT"] = DEFAULT;
     activeUser = DEFAULT;
@@ -158,9 +161,6 @@ void Session::start() {
             actionsLog.push_back(log);
         }
     }
-    command = "";
-    second = "";
-    third = "";
     BaseAction* exit = new Exit();
     exit->act(*this);
     actionsLog.push_back(exit);
@@ -202,9 +202,10 @@ Session::Session(const Session &other):command(""), second(""),third(""),content
     }
 }
 
-Session &Session::operator=(const Session &other) {
+Session& Session::operator=(const Session &other) {
     if(this != &other){
         clear();
+        clean();
         fillDataStructures(other.content, other.actionsLog, other.userMap);
         for(std::pair<std::string, User*> user: userMap){
             if(other.activeUser->getName() == user.first){
@@ -217,8 +218,7 @@ Session &Session::operator=(const Session &other) {
 
 
 
-void Session::fillDataStructures(const std::vector<Watchable *> &_content, const std::vector<BaseAction *> &_actionLog,
-                                 const std::unordered_map<std::string, User *> &_userMap) {
+void Session::fillDataStructures(const std::vector<Watchable *> &_content, const std::vector<BaseAction *> &_actionLog, const std::unordered_map<std::string, User *> &_userMap) {
     for(Watchable* cont: _content){
         content.push_back(cont->clone());
     }
@@ -240,7 +240,7 @@ void Session::fillDataStructures(const std::vector<Watchable *> &_content, const
 }
 
 
-Session::Session(const Session&& other):command(""), second(""),third(""),content({}), actionsLog({}), userMap({}), activeUser(nullptr){
+Session::Session(Session&& other):command(""), second(""),third(""),content({}), actionsLog({}), userMap({}), activeUser(nullptr){
     std::string activeUSerName = other.activeUser->getName();
     stealDataStructures(other.content, other.actionsLog, other.userMap);
     for(std::pair<std::string, User*> user: userMap){
@@ -251,33 +251,27 @@ Session::Session(const Session&& other):command(""), second(""),third(""),conten
 }
 
 
-Session& Session::operator=(const Session&& other){
+Session& Session::operator=(Session&& other){
     if(this != &other){
         clear();
-        std::string activeUSerName = other.activeUser->getName();
+        clean();
         stealDataStructures(other.content, other.actionsLog, other.userMap);
-        for(std::pair<std::string, User*> user: userMap){
-            if(activeUSerName == user.first){
-                activeUser = user.second;
-            }
-        }
+        activeUser = other.activeUser;
+        other.activeUser = nullptr;
     }
     return *this;
 }
 
-void Session::stealDataStructures(const std::vector<Watchable *> &_content, const std::vector<BaseAction *> &_actionLog,
-                                  const std::unordered_map<std::string, User *> &_userMap) {
-
-    for(Watchable* cont: _content){
-        content.push_back(cont->clone());
-        cont = nullptr;
+void Session::stealDataStructures(std::vector<Watchable *> &_content, std::vector<BaseAction *> &_actionLog, std::unordered_map<std::string, User *> &_userMap) {
+    for(unsigned int i = 0; i < _content.size(); i++){
+        content.push_back(_content.at(i));
     }
-    for(BaseAction* action: _actionLog){
-        actionsLog.push_back(action->clone());
-        action = nullptr;
+    for(unsigned int i = 0; i < _actionLog.size(); i++){
+        actionsLog.push_back(_actionLog.at(i));
+        _actionLog.at(i) = nullptr;
     }
     for(std::pair<std::string, User*> user: _userMap){
-        User* newUser = user.second->clone();
+        User* newUser = user.second;
         userMap[user.first] = newUser;
         newUser->set_history({});
         for (Watchable* w : user.second->get_history()){
@@ -288,7 +282,19 @@ void Session::stealDataStructures(const std::vector<Watchable *> &_content, cons
             }
         }
         user.first = "";
-        user.second = nullptr;
+        _userMap[user.first] = nullptr;
     }
+    for(unsigned int i = 0; i < _content.size(); i++){
+        _content.at(i) = nullptr;
+    }
+}
+
+void Session::clean() {
+    content.clear();
+    actionsLog.clear();
+    userMap.clear();
+    command.clear();
+    second.clear();
+    third.clear();
 }
 

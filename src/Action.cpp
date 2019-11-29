@@ -2,13 +2,10 @@
 // Created by yaelgeis@wincs.cs.bgu.ac.il on 20/11/2019.
 //
 #include "../include/User.h"
-#include "../include/json.hpp"
 #include <fstream>
 #include "../include/Watchable.h"
 #include "../include/Session.h"
 #include "../include/Action.h"
-#include <sstream>
-
 #include <unordered_map>
 
 

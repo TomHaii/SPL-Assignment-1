@@ -20,11 +20,11 @@ public:
     //copy assignment operator
     Session& operator=(const Session& other);
     //move constructor
-    Session(const Session&& other);
+    Session(Session&& other);
     //move assignment operator
-    Session&operator=(const Session&& other);
+    Session&operator=(Session&& other);
     void fillDataStructures(const std::vector<Watchable*> &_content, const std::vector<BaseAction*> &_actionLog, const std::unordered_map<std::string, User*> &_userMap);
-    void stealDataStructures(const std::vector<Watchable*> &_content, const std::vector<BaseAction*> &_actionLog, const std::unordered_map<std::string, User*> &_userMap);
+    void stealDataStructures(std::vector<Watchable*> &_content, std::vector<BaseAction*> &_actionLog, std::unordered_map<std::string, User*> &_userMap);
     void start();
     User& getActiveUser() const;
     std::vector<BaseAction*> getActionsLog() const;
@@ -35,6 +35,7 @@ public:
     std::string secondInput() const;
     std::string thirdInput() const;
     void clear();
+    void clean();
 private:
     std::string command;
     std::string second;

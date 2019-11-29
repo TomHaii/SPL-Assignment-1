@@ -265,6 +265,7 @@ Session& Session::operator=(Session&& other){
 void Session::stealDataStructures(std::vector<Watchable *> &_content, std::vector<BaseAction *> &_actionLog, std::unordered_map<std::string, User *> &_userMap) {
     for(unsigned int i = 0; i < _content.size(); i++){
         content.push_back(_content.at(i));
+        _content.at(i) = nullptr;
     }
     for(unsigned int i = 0; i < _actionLog.size(); i++){
         actionsLog.push_back(_actionLog.at(i));
@@ -273,19 +274,7 @@ void Session::stealDataStructures(std::vector<Watchable *> &_content, std::vecto
     for(std::pair<std::string, User*> user: _userMap){
         User* newUser = user.second;
         userMap[user.first] = newUser;
-        newUser->set_history({});
-        for (Watchable* w : user.second->get_history()){
-            for (Watchable* cont : content){
-                if (w->toString() == cont->toString()){
-                    newUser->addToHistory(cont);
-                }
-            }
-        }
-        user.first = "";
         _userMap[user.first] = nullptr;
-    }
-    for(unsigned int i = 0; i < _content.size(); i++){
-        _content.at(i) = nullptr;
     }
 }
 

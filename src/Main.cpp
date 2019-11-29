@@ -14,6 +14,7 @@ int main(int argc, char** argv){
     s2->start();
     *s2 = std::move(*s);
     s2->start();
+    delete(s);
     delete(s2);
     return 0;
 }

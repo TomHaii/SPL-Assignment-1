@@ -21,7 +21,6 @@ public:
     std::vector<Watchable*> get_history() const;
     void set_history(std::vector<Watchable*> _history);
     virtual void addToHistory(Watchable*) = 0;
-
 protected:
     void setRecommendedAlgorithm(std::string);
     std::vector<Watchable*> history;

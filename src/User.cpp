@@ -38,7 +38,6 @@ User::~User() {
 
 }
 
-
 LengthRecommenderUser::LengthRecommenderUser(const std::string& _name): User(_name), average(0) {
     setRecommendedAlgorithm("len");
 }

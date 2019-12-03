@@ -122,8 +122,16 @@ Watchable* GenreRecommenderUser::getRecommendation(Session& s) {
         for (std::pair<std::string, long> p : map){
             currTag = p.first;
             currNum = p.second;
+            std::string tmpCurrentTag;
+            for(char c: currTag){
+                tmpCurrentTag += tolower(c);
+            }
+            std::string tmpBestNextTag;
+            for(char c: bestNextTag){
+                tmpBestNextTag += tolower(c);
+            }
             if ((!(std::find(prevTags.begin(), prevTags.end(), currTag) != prevTags.end()))&&
-                ((currNum > bestTagNum) || (currNum == bestTagNum && currTag.compare(bestNextTag) < 0))){
+                ((currNum > bestTagNum) || (currNum == bestTagNum && tmpCurrentTag.compare(tmpBestNextTag) < 0))){
                 bestNextTag = currTag;
                 bestTagNum = currNum;
             }
